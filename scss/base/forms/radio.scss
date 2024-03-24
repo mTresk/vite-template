@@ -1,0 +1,60 @@
+.options {
+	display: flex;
+	gap: rem(20);
+
+	// .options__item
+	&__item {
+		position: relative;
+		cursor: pointer;
+	}
+
+	// .options__label
+	&__label {
+		display: inline-flex;
+		gap: rem(8);
+		align-items: center;
+		cursor: pointer;
+
+		&::before {
+			flex: 0 0 18px;
+			align-self: flex-start;
+			width: 18px;
+			height: 18px;
+			content: '';
+			border: 3px solid rgb(0 0 0 / 40%);
+			border-radius: rem(2);
+		}
+	}
+
+	// .options__text
+	&__text {
+		font-weight: 500;
+		line-height: 125%;
+		color: rgb(0 0 0 / 40%);
+
+		@include adaptiveValue('font-size', 14, 12);
+	}
+
+	// .options__input
+	&__input {
+		position: absolute;
+		width: 0;
+		height: 0;
+		opacity: 0;
+
+		&:checked + .options__label {
+			.options__text {
+				color: rgb(0 0 0 / 100%);
+			}
+
+			&::before {
+				background-image: url("data:image/svg+xml,%3Csvg width='13' height='9' viewBox='0 0 13 9' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5.00301 9.00002L0.76001 4.75701L2.17401 3.34302L5.00301 6.17201L10.659 0.515015L12.074 1.92901L5.00301 9.00002Z' fill='%23535353'/%3E%3C/svg%3E%0A");
+				background-repeat: no-repeat;
+				background-position:
+					left 50% top 50%,
+					0 0;
+				border: 3px solid $mainColor;
+			}
+		}
+	}
+}
