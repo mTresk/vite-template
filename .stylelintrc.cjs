@@ -11,7 +11,6 @@ module.exports = {
 		'media-query-no-invalid': null,
 		'selector-class-pattern': null,
 		'scss/dollar-variable-pattern': null,
-		'scss/at-mixin-pattern': null,
 		'no-invalid-position-at-import-rule': null,
 		'no-descending-specificity': null,
 	},
