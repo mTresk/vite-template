@@ -1,7 +1,6 @@
 @use 'sass:math';
 @import 'base/mixins';
-
-// @import 'fonts/fonts';
+@import 'fonts/fonts';
 
 $fontFamily: '', sans-serif;
 $fontSize: rem(16);
