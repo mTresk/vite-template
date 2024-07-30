@@ -1,6 +1,7 @@
 import * as flsFunctions from './files/functions.js'
 import * as flsForms from './files/forms/forms.js'
 import * as flsScroll from './files/scroll/scroll.js'
+// import './libs/parallax-mouse.js'
 // import './libs/popup.js'
 // import './libs/select.js'
 // import './files/forms/datepicker.js'
