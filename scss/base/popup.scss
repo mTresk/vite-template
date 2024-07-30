@@ -7,7 +7,7 @@ body::after {
 	height: 100%;
 	pointer-events: none;
 	content: '';
-	background-color: rgb(0 0 0 / 60%);
+	background-color: rgb(0 0 0 / 80%);
 	opacity: 0;
 	transition: opacity 0.8s ease 0s;
 }
@@ -21,7 +21,7 @@ body::after {
 .popup {
 	position: fixed;
 	inset: 0;
-	padding: 30px 10px;
+	padding: rem(40) rem(10);
 	pointer-events: none;
 	visibility: hidden;
 	transition: visibility 0.8s ease 0s;
@@ -37,9 +37,10 @@ body::after {
 	}
 
 	&__content {
+		position: relative;
 		width: 100%;
-		max-width: 900px;
-		padding: 20px;
+		max-width: rem(900);
+		padding: rem(20);
 		visibility: hidden;
 		background-color: #eee;
 		border-radius: 20px;
@@ -49,6 +50,32 @@ body::after {
 		.lock & {
 			visibility: visible;
 		}
+	}
+
+	&__close {
+		position: absolute;
+		top: -40px;
+		right: 0;
+
+		@include adaptive-value('top', -40, -30);
+
+		svg {
+			height: auto;
+
+			@include adaptive-value('max-width', 32, 26);
+
+			path {
+				transition: fill 0.3s ease-in-out;
+			}
+		}
+
+		// @media (any-hover: hover) {
+		// 	&:hover {
+		// 		svg path {
+		// 			fill: $accentColor;
+		// 		}
+		// 	}
+		// }
 	}
 }
 
