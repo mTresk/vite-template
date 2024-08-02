@@ -1,37 +1,83 @@
-const map = document.querySelector('#map')
+const mapRoot = document.querySelector('#map')
 
-if (map) {
-	function mapInit() {
-		ymaps.ready(init)
-		function init() {
-			const center = map.getAttribute('data-coordinates').split(',')
-			let contactMap = new ymaps.Map('map', {
-				center: center,
+if (mapRoot) {
+	async function initMap() {
+		await ymaps3.ready
+		const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } = ymaps3
+
+		// Координаты центра
+		const center = mapRoot.getAttribute('data-coordinates').split(',').reverse()
+
+		// Создаем слой
+		const layer = new YMapDefaultSchemeLayer({
+			customization: [
+				{
+					tags: {
+						any: ['road'],
+					},
+					elements: 'geometry',
+					stylers: [
+						{
+							color: '#4E4E4E',
+						},
+					],
+				},
+				{
+					tags: {
+						any: ['water'],
+					},
+					elements: 'geometry',
+					stylers: [
+						{
+							color: '#000000',
+						},
+					],
+				},
+				{
+					tags: {
+						any: ['landscape', 'admin', 'land', 'transit'],
+					},
+					elements: 'geometry',
+					stylers: [
+						{
+							color: '#212121',
+						},
+					],
+				},
+				{
+					tags: {
+						any: ['building'],
+					},
+					elements: 'geometry',
+					stylers: [
+						{
+							color: '#757474',
+						},
+					],
+				},
+			],
+		})
+
+		// Создаем карту
+		const map = new YMap(mapRoot, {
+			location: {
+				center,
 				zoom: 17,
-				controls: [],
-			})
-			contactMap.geoObjects.add(
-				new ymaps.Placemark(
-					center,
-					{},
-					{
-						iconLayout: 'default#imageWithContent',
-						iconImageHref: 'img/pin.svg',
-						iconImageSize: [30, 30],
-						iconImageOffset: [-15, -25],
-					}
-				)
-			)
+			},
+			showScaleInCopyrights: false,
+		})
 
-			contactMap.controls.remove('geolocationControl') // удаляем геолокацию
-			contactMap.controls.remove('searchControl') // удаляем поиск
-			contactMap.controls.remove('trafficControl') // удаляем контроль трафика
-			contactMap.controls.remove('typeSelector') // удаляем тип
-			contactMap.controls.remove('fullscreenControl') // удаляем кнопку перехода в полноэкранный режим
-			contactMap.controls.remove('rulerControl') // удаляем контрол правил
-			contactMap.behaviors.disable(['scrollZoom']) // отключаем скролл карты (опционально)
-		}
+		// Создаем маркер
+		const markerElement = document.createElement('img')
+		markerElement.className = 'icon-marker'
+		markerElement.src = 'images/pin.svg'
+		const marker = new YMapMarker({ coordinates: center }, markerElement)
+
+		// Добавляем элементы на карту
+		map.addChild(new YMapDefaultFeaturesLayer())
+		map.addChild(layer)
+		map.addChild(marker)
 	}
 
-	mapInit()
+	initMap()
 }
