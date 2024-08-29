@@ -241,9 +241,7 @@ export function spoilers() {
 		function initSpoilerBody(spoilersBlock, hideSpoilerBody = true) {
 			let spoilerTitles = spoilersBlock.querySelectorAll('[data-spoiler]')
 			if (spoilerTitles.length) {
-				spoilerTitles = Array.from(spoilerTitles).filter(
-					(item) => item.closest('[data-spoilers]') === spoilersBlock
-				)
+				spoilerTitles = Array.from(spoilerTitles).filter((item) => item.closest('[data-spoilers]') === spoilersBlock)
 				spoilerTitles.forEach((spoilerTitle) => {
 					if (hideSpoilerBody) {
 						spoilerTitle.removeAttribute('tabindex')
@@ -263,9 +261,7 @@ export function spoilers() {
 				const spoilerTitle = el.closest('[data-spoiler]')
 				const spoilersBlock = spoilerTitle.closest('[data-spoilers]')
 				const oneSpoiler = spoilersBlock.hasAttribute('data-one-spoiler')
-				const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
-					? parseInt(spoilersBlock.dataset.spoilersSpeed)
-					: 500
+				const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed ? parseInt(spoilersBlock.dataset.spoilersSpeed) : 500
 				if (!spoilersBlock.querySelectorAll('._slide').length) {
 					if (oneSpoiler && !spoilerTitle.classList.contains('_spoiler-active')) {
 						hideSpoilersBody(spoilersBlock)
@@ -278,9 +274,7 @@ export function spoilers() {
 		}
 		function hideSpoilersBody(spoilersBlock) {
 			const spoilerActiveTitle = spoilersBlock.querySelector('[data-spoiler]._spoiler-active')
-			const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
-				? parseInt(spoilersBlock.dataset.spoilersSpeed)
-				: 500
+			const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed ? parseInt(spoilersBlock.dataset.spoilersSpeed) : 500
 			if (spoilerActiveTitle && !spoilersBlock.querySelectorAll('._slide').length) {
 				spoilerActiveTitle.classList.remove('_spoiler-active')
 				_slideUp(spoilerActiveTitle.nextElementSibling, spoilerSpeed)
@@ -345,9 +339,7 @@ export function tabs() {
 			let tabsContent = tabsMediaItem.querySelector('[data-tabs-body]')
 			let tabsContentItems = tabsMediaItem.querySelectorAll('[data-tabs-item]')
 			tabsTitleItems = Array.from(tabsTitleItems).filter((item) => item.closest('[data-tabs]') === tabsMediaItem)
-			tabsContentItems = Array.from(tabsContentItems).filter(
-				(item) => item.closest('[data-tabs]') === tabsMediaItem
-			)
+			tabsContentItems = Array.from(tabsContentItems).filter((item) => item.closest('[data-tabs]') === tabsMediaItem)
 			tabsContentItems.forEach((tabsContentItem, index) => {
 				if (matchMedia.matches) {
 					tabsContent.append(tabsTitleItems[index])
@@ -427,9 +419,7 @@ export function tabs() {
 			if (!tabTitle.classList.contains('_tab-active') && !tabsBlock.querySelector('._slide')) {
 				let tabActiveTitle = tabsBlock.querySelectorAll('[data-tabs-title]._tab-active')
 				tabActiveTitle.length
-					? (tabActiveTitle = Array.from(tabActiveTitle).filter(
-							(item) => item.closest('[data-tabs]') === tabsBlock
-					  ))
+					? (tabActiveTitle = Array.from(tabActiveTitle).filter((item) => item.closest('[data-tabs]') === tabsBlock))
 					: null
 				tabActiveTitle.length ? tabActiveTitle[0].classList.remove('_tab-active') : null
 				tabTitle.classList.add('_tab-active')
@@ -504,9 +494,7 @@ export function showMore() {
 			showMoreContent = Array.from(showMoreContent).filter(
 				(item) => item.closest('[data-showmore]') === showMoreBlock
 			)[0]
-			showMoreButton = Array.from(showMoreButton).filter(
-				(item) => item.closest('[data-showmore]') === showMoreBlock
-			)[0]
+			showMoreButton = Array.from(showMoreButton).filter((item) => item.closest('[data-showmore]') === showMoreBlock)[0]
 			const hiddenHeight = getHeight(showMoreBlock, showMoreContent)
 			if (matchMedia.matches || !matchMedia) {
 				if (hiddenHeight < getOriginalHeight(showMoreContent)) {
@@ -525,9 +513,7 @@ export function showMore() {
 			let hiddenHeight = 0
 			const showMoreType = showMoreBlock.dataset.showmore ? showMoreBlock.dataset.showmore : 'size'
 			if (showMoreType === 'items') {
-				const showMoreTypeValue = showMoreContent.dataset.showmoreContent
-					? showMoreContent.dataset.showmoreContent
-					: 3
+				const showMoreTypeValue = showMoreContent.dataset.showmoreContent ? showMoreContent.dataset.showmoreContent : 3
 				const showMoreItems = showMoreContent.children
 				for (let index = 1; index < showMoreItems.length; index++) {
 					const showMoreItem = showMoreItems[index - 1]
@@ -563,9 +549,7 @@ export function showMore() {
 					const showMoreButton = targetEvent.closest('[data-showmore-button]')
 					const showMoreBlock = showMoreButton.closest('[data-showmore]')
 					const showMoreContent = showMoreBlock.querySelector('[data-showmore-content]')
-					const showMoreSpeed = showMoreBlock.dataset.showmoreButton
-						? showMoreBlock.dataset.showmoreButton
-						: '500'
+					const showMoreSpeed = showMoreBlock.dataset.showmoreButton ? showMoreBlock.dataset.showmoreButton : '500'
 					const hiddenHeight = getHeight(showMoreBlock, showMoreContent)
 					if (!showMoreContent.classList.contains('_slide')) {
 						showMoreBlock.classList.contains('_showmore-active')
@@ -670,26 +654,4 @@ export function dataMediaQueries(array, dataSetValue) {
 			return mdQueriesArray
 		}
 	}
-}
-// Направление скрола
-export function scrollDirection() {
-	const body = document.body
-	const scrollUp = 'scroll-up'
-	const scrollDown = 'scroll-down'
-	let lastScroll = 0
-	window.addEventListener('scroll', () => {
-		const currentScroll = window.pageYOffset
-		if (currentScroll <= 0) {
-			body.classList.remove(scrollUp)
-			return
-		}
-		if (currentScroll > lastScroll && !body.classList.contains(scrollDown)) {
-			body.classList.remove(scrollUp)
-			body.classList.add(scrollDown)
-		} else if (currentScroll < lastScroll && body.classList.contains(scrollDown)) {
-			body.classList.remove(scrollDown)
-			body.classList.add(scrollUp)
-		}
-		lastScroll = currentScroll
-	})
 }

@@ -14,14 +14,13 @@ import * as flsScroll from './files/scroll/scroll.js'
 // import './libs/dynamic-adapt.js'
 // import './files/select.js'
 // import './files/map.js'
-// import './files/script.js'
+import './files/script.js'
 import '../scss/style.scss'
 
 // flsFunctions.addTouchClass()
 // flsFunctions.addLoadedClass()
 // flsFunctions.menuInit()
 // flsFunctions.fullVHfix()
-// flsFunctions.scrollDirection()
 // flsFunctions.spoilers()
 // flsFunctions.tabs()
 // flsFunctions.showMore()
@@ -31,5 +30,6 @@ import '../scss/style.scss'
 
 // flsScroll.pageNavigation()
 // flsScroll.headerScroll()
+// flsScroll.scrollDirection()
 // flsScroll.stickyBlock()
 // flsScroll.digitsCounter()
