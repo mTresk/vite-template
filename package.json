@@ -38,6 +38,7 @@
 		"nice-select2": "^2.2.0",
 		"nouislider": "^15.8.1",
 		"smooth-scrollbar": "^8.8.4",
-		"swiper": "^11.1.14"
+		"swiper": "^11.1.14",
+		"tippy.js": "^6.3.7"
 	}
 }
