@@ -1,6 +1,7 @@
 import fs from 'fs'
 import fonter from 'gulp-fonter-fix'
 import ttf2woff2 from 'gulp-ttf2woff2'
+import { basename as _basename, extname } from 'path'
 
 export function otfToTtf() {
 	return app.gulp
@@ -32,42 +33,76 @@ export function ttfToWoff() {
 export function fonstStyle() {
 	const fontsFile = `${app.path.appFolder}/scss/fonts/fonts.scss`
 
-	fs.readdir(app.path.build.fonts, function (err, fontsFiles) {
-		if (fontsFiles) {
+	fs.readdir(app.path.build.fonts, function (err, fonts) {
+		if (fonts.length) {
 			fs.writeFile(fontsFile, '', cb)
 			let newFileOnly
-			for (var i = 0; i < fontsFiles.length; i++) {
-				let fontFileName = fontsFiles[i].split('.')[0]
+
+			fonts.forEach((font) => {
+				const ext = extname(font)
+				const fontFileName = _basename(font, ext)
+				const basename = fontFileName.toLowerCase()
+				const fontName = fontFileName.split('-')[0] ?? basename
+
 				if (newFileOnly !== fontFileName) {
-					let fontName = fontFileName.split('-')[0] ? fontFileName.split('-')[0] : fontFileName
-					let fontWeight = fontFileName.split('-')[1] ? fontFileName.split('-')[1] : fontFileName
-					if (fontWeight.toLowerCase() === 'thin') {
-						fontWeight = 100
-					} else if (fontWeight.toLowerCase() === 'extralight') {
-						fontWeight = 200
-					} else if (fontWeight.toLowerCase() === 'light') {
-						fontWeight = 300
-					} else if (fontWeight.toLowerCase() === 'medium') {
-						fontWeight = 500
-					} else if (fontWeight.toLowerCase() === 'semibold') {
-						fontWeight = 600
-					} else if (fontWeight.toLowerCase() === 'bold') {
-						fontWeight = 700
-					} else if (fontWeight.toLowerCase() === 'extrabold' || fontWeight.toLowerCase() === 'heavy') {
-						fontWeight = 800
-					} else if (fontWeight.toLowerCase() === 'black') {
-						fontWeight = 900
-					} else {
-						fontWeight = 400
+					let fontWeight
+					let fontStyle
+
+					switch (true) {
+						case basename.includes('thin'):
+							fontWeight = 100
+							break
+						case basename.includes('extralight'):
+							fontWeight = 200
+							break
+						case basename.includes('light'):
+							fontWeight = 300
+							break
+						case basename.includes('medium'):
+							fontWeight = 500
+							break
+						case basename.includes('semibold'):
+							fontWeight = 600
+							break
+						case basename.includes('bold'):
+							fontWeight = 700
+							break
+						case basename.includes('extrabold'):
+							fontWeight = 800
+							break
+						case basename.includes('heavy'):
+							fontWeight = 800
+							break
+						case basename.includes('black'):
+							fontWeight = 900
+							break
+						default:
+							fontWeight = 400
 					}
+
+					switch (true) {
+						case basename.includes('normal'):
+							fontStyle = 'normal'
+							break
+						case basename.includes('italic'):
+							fontStyle = 'italic'
+							break
+						case basename.includes('oblique'):
+							fontStyle = 'oblique'
+							break
+						default:
+							fontStyle = 'normal'
+					}
+
 					fs.appendFile(
 						fontsFile,
-						`@font-face {\n\tfont-family: ${fontName};\n\tfont-display: swap;\n\tsrc: url("../fonts/${fontFileName}.woff2") format("woff2"), url("../fonts/${fontFileName}.woff") format("woff");\n\tfont-weight: ${fontWeight};\n\tfont-style: normal;\n}\r\n`,
+						`@font-face {\n\tfont-family: ${fontName};\n\tfont-display: swap;\n\tsrc: url("../fonts/${fontFileName}.woff2") format("woff2"), url("../fonts/${fontFileName}.woff") format("woff");\n\tfont-weight: ${fontWeight};\n\tfont-style: ${fontStyle};\n}\r\n`,
 						cb
 					)
+
 					newFileOnly = fontFileName
 				}
-			}
+			})
 		} else {
 			fs.unlink(fontsFile, cb)
 		}
