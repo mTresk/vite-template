@@ -10,7 +10,7 @@ function initSliders() {
 			observeParents: true,
 			slidesPerView: 1,
 			spaceBetween: 0,
-			autoHeight: true,
+			autoHeight: false,
 			speed: 800,
 
 			navigation: {
@@ -19,6 +19,22 @@ function initSliders() {
 			},
 			on: {},
 		})
+	}
+
+	function breakpointSliderEnabler(width, callback) {
+		let slider
+		const breakpoint = window.matchMedia(`(max-width:${width}px)`)
+
+		const init = function () {
+			if (breakpoint.matches) {
+				slider = callback()
+			} else if (!breakpoint.matches && slider) {
+				slider.destroy(true, true)
+			}
+		}
+
+		breakpoint.addEventListener('change', init)
+		init()
 	}
 }
 
