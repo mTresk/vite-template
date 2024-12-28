@@ -12,9 +12,9 @@ class Popup {
 			// Для сторонних объектов
 			fixElementSelector: '[data-lp]', // Атрибут для элементов с левым паддингом (которые fixed)
 			// Для объекта попапа
-			youtubeAttribute: 'data-popup-youtube', // Атрибут для кода youtube
-			youtubePlaceAttribute: 'data-popup-youtube-place', // Атрибут для вставки ролика youtube
-			setAutoplayYoutube: true,
+			vkAttribute: 'data-popup-vk', // Атрибут для кода vk
+			vkPlaceAttribute: 'data-popup-vk-place', // Атрибут для вставки ролика vk
+			setAutoplayVk: true,
 			// Изменение классов
 			classes: {
 				popup: 'popup',
@@ -38,7 +38,7 @@ class Popup {
 				afterClose: function () {},
 			},
 		}
-		this.youTubeCode
+		this.vkCode
 		this.isOpen = false
 		// Текущее окно
 		this.targetOpen = {
@@ -111,8 +111,8 @@ class Popup {
 					this._dataValue = buttonOpen.getAttribute(this.options.attributeOpenButton)
 						? buttonOpen.getAttribute(this.options.attributeOpenButton)
 						: 'error'
-					this.youTubeCode = buttonOpen.getAttribute(this.options.youtubeAttribute)
-						? buttonOpen.getAttribute(this.options.youtubeAttribute)
+					this.vkCode = buttonOpen.getAttribute(this.options.vkAttribute)
+						? buttonOpen.getAttribute(this.options.vkAttribute)
 						: null
 					if (this._dataValue !== 'error') {
 						if (!this.isOpen) this.lastFocusEl = buttonOpen
@@ -169,24 +169,16 @@ class Popup {
 			this.targetOpen.element = document.querySelector(this.targetOpen.selector)
 
 			if (this.targetOpen.element) {
-				// YouTube
-				if (this.youTubeCode) {
-					const codeVideo = this.youTubeCode
-					const urlVideo = `https://www.youtube.com/embed/${codeVideo}?rel=0&showinfo=0&autoplay=1`
+				// Vk
+				if (this.vkCode) {
+					const codeVideo = this.vkCode
+					const urlVideo = `https://vk.ru/video_ext.php?oid=-${codeVideo}&autoplay=1`
 					const iframe = document.createElement('iframe')
 					iframe.setAttribute('allowfullscreen', '')
-
-					const autoplay = this.options.setAutoplayYoutube ? 'autoplay;' : ''
+					const autoplay = this.options.setAutoplayVk ? 'autoplay;' : ''
 					iframe.setAttribute('allow', `${autoplay}; encrypted-media`)
-
 					iframe.setAttribute('src', urlVideo)
-
-					if (!this.targetOpen.element.querySelector(`[${this.options.youtubePlaceAttribute}]`)) {
-						const youtubePlace = this.targetOpen.element
-							.querySelector('.popup__text')
-							.setAttribute(`${this.options.youtubePlaceAttribute}`, '')
-					}
-					this.targetOpen.element.querySelector(`[${this.options.youtubePlaceAttribute}]`).appendChild(iframe)
+					this.targetOpen.element.querySelector(`[${this.options.vkPlaceAttribute}]`).appendChild(iframe)
 				}
 
 				// До открытия
@@ -253,10 +245,10 @@ class Popup {
 			})
 		)
 
-		// YouTube
-		if (this.youTubeCode) {
-			if (this.targetOpen.element.querySelector(`[${this.options.youtubePlaceAttribute}]`))
-				this.targetOpen.element.querySelector(`[${this.options.youtubePlaceAttribute}]`).innerHTML = ''
+		// Vk
+		if (this.vkCode) {
+			if (this.targetOpen.element.querySelector(`[${this.options.vkPlaceAttribute}]`))
+				this.targetOpen.element.querySelector(`[${this.options.vkPlaceAttribute}]`).innerHTML = ''
 		}
 		this.previousOpen.element.classList.remove(this.options.classes.popupActive)
 		// aria-hidden
