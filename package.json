@@ -19,7 +19,7 @@
 		"gulp-fonter-fix": "^0.0.1",
 		"gulp-ttf2woff2": "^5.0.0",
 		"prettier": "^3.4.2",
-		"sass": "^1.80.6",
+		"sass": "^1.83.1",
 		"sharp": "^0.33.5",
 		"stylelint": "^16.13.0",
 		"stylelint-config-recess-order": "^5.1.1",
