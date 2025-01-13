@@ -43,7 +43,7 @@ body::after {
 		padding: rem(20);
 		visibility: hidden;
 		background-color: #eee;
-		border-radius: 20px;
+		border-radius: rem(20);
 		transition: transform 0.3s ease 0s;
 		transform: scale(0);
 
@@ -54,7 +54,6 @@ body::after {
 
 	&__close {
 		position: absolute;
-		top: -40px;
 		right: 0;
 
 		@include adaptive-value('top', -40, -30);
@@ -69,13 +68,13 @@ body::after {
 			}
 		}
 
-		// @media (any-hover: hover) {
-		// 	&:hover {
-		// 		svg path {
-		// 			fill: $accentColor;
-		// 		}
-		// 	}
-		// }
+		@media (any-hover: hover) {
+			&:hover {
+				svg path {
+					fill: $accentColor;
+				}
+			}
+		}
 	}
 }
 

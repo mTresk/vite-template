@@ -10,12 +10,6 @@
 	}
 }
 
-@function percent($px, $from) {
-	$result: math.div($px, $from) * 100%;
-
-	@return $result;
-}
-
 @function rem($px) {
 	$result: math.div($px, 16) + rem;
 
@@ -26,18 +20,6 @@
 	$result: math.div($px, $current) + em;
 
 	@return $result;
-}
-
-@mixin currency($sym) {
-	&::after {
-		content: '#{$sym}';
-	}
-}
-
-@mixin grid-cards($type: fit, $min: 280px, $max: 1fr, $gap: 30px) {
-	display: grid;
-	grid-template-columns: repeat(auto-#{$type}, minmax($min, $max));
-	gap: $gap;
 }
 
 @mixin adaptive-value($property, $startSize, $minSize, $keepSize: 0, $widthFrom: $containerWidth, $widthTo: $minWidth) {
@@ -84,10 +66,8 @@
 
 		@supports not (#{$property}: $propertyValue) {
 			#{$property}: calc(
-				#{rem($minSize)} + #{$addSize} * (100vw - #{rem($widthTo)}) / #{math.div($widthFrom, 16) - math.div(
-						$widthTo,
-						16
-					)}
+				#{rem($minSize)} + #{$addSize} * (100vw - #{rem($widthTo)}) /
+					#{math.div($widthFrom, 16) - math.div($widthTo, 16)}
 			);
 		}
 	}
