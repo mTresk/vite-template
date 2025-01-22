@@ -1,11 +1,6 @@
 /* eslint-env node */
 module.exports = {
-	extends: [
-		'stylelint-config-standard-scss',
-		'stylelint-config-recommended-vue',
-		'stylelint-config-recess-order',
-		'stylelint-prettier',
-	],
+	extends: ['stylelint-config-standard-scss', 'stylelint-config-recess-order', 'stylelint-prettier'],
 	rules: {
 		'at-rule-no-unknown': null,
 		'media-query-no-invalid': null,
