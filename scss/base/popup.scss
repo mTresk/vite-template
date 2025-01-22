@@ -21,9 +21,9 @@ body::after {
 .popup {
 	position: fixed;
 	inset: 0;
+	visibility: hidden;
 	padding: rem(40) rem(10);
 	pointer-events: none;
-	visibility: hidden;
 	transition: visibility 0.8s ease 0s;
 
 	&__wrapper {
@@ -38,14 +38,14 @@ body::after {
 
 	&__content {
 		position: relative;
+		visibility: hidden;
 		width: 100%;
 		max-width: rem(900);
 		padding: rem(20);
-		visibility: hidden;
 		background-color: #eee;
 		border-radius: rem(20);
-		transition: transform 0.3s ease 0s;
 		transform: scale(0);
+		transition: transform 0.3s ease 0s;
 
 		.lock & {
 			visibility: visible;
@@ -80,9 +80,9 @@ body::after {
 
 .popup_show {
 	z-index: 150;
+	visibility: visible;
 	overflow: auto;
 	pointer-events: auto;
-	visibility: visible;
 
 	.popup__content {
 		visibility: visible;
