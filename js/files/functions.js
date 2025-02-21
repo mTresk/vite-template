@@ -436,9 +436,9 @@ export function tabs() {
 }
 // Модуль работы с меню (бургер) =======================================================================================================================================================================================================================
 export function menuInit() {
-	if (document.querySelector('.icon-menu')) {
+	if (document.querySelector('[data-menu-button]')) {
 		document.addEventListener('click', function (e) {
-			if (bodyLockStatus && e.target.closest('.icon-menu')) {
+			if (bodyLockStatus && e.target.closest('[data-menu-button]')) {
 				bodyLockToggle()
 				document.documentElement.classList.toggle('menu-open')
 			}
