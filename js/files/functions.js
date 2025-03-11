@@ -308,18 +308,19 @@ export function tabs() {
 
 	if (tabs.length > 0) {
 		const hash = getHash()
-		let input = 'click'
 
 		if (hash && hash.startsWith('tab-')) {
 			tabsActiveHash = hash.replace('tab-', '').split('-')
 		}
 		tabs.forEach((tabsBlock, index) => {
 			if (tabsBlock.getAttribute('data-tabs') === 'hover') {
-				input = 'mouseover'
+				tabsBlock.addEventListener('mouseover', setTabsAction)
+			} else {
+				tabsBlock.addEventListener('click', setTabsAction)
 			}
 			tabsBlock.classList.add('_tab-init')
 			tabsBlock.setAttribute('data-tabs-index', index)
-			tabsBlock.addEventListener(input, setTabsAction)
+
 			initTabs(tabsBlock)
 		})
 
