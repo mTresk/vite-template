@@ -1,7 +1,8 @@
-import fs from 'fs'
+import fs from 'node:fs'
+import { basename as _basename, extname } from 'node:path'
 import fonter from 'gulp-fonter-fix'
 import ttf2woff2 from 'gulp-ttf2woff2'
-import { basename as _basename, extname } from 'path'
+import { app } from '../../gulpfile.js'
 
 export function otfToTtf() {
 	return app.gulp
@@ -33,7 +34,7 @@ export function ttfToWoff() {
 export function fonstStyle() {
 	const fontsFile = `${app.path.appFolder}/scss/fonts/fonts.scss`
 
-	fs.readdir(app.path.build.fonts, function (err, fonts) {
+	fs.readdir(app.path.build.fonts, (_err, fonts) => {
 		if (fonts.length) {
 			fs.writeFile(fontsFile, '', cb)
 			let newFileOnly

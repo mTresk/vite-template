@@ -1,1 +1,1 @@
-import { isMobile } from './functions.js'
+// Дополнительные скрипты

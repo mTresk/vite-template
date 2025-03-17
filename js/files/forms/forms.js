@@ -1,70 +1,12 @@
+import { FLS } from '../functions.js'
 import { flsModules } from '../modules.js'
-import { isMobile, _slideUp, _slideDown, _slideToggle, FLS } from '../functions.js'
 import { gotoBlock } from '../scroll/gotoblock.js'
 
-export function formFieldsInit(options = { viewPass: false, autoHeight: false }) {
-	document.body.addEventListener('focusin', function (e) {
-		const targetElement = e.target
-		if (targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA') {
-			if (!targetElement.hasAttribute('data-no-focus-classes')) {
-				targetElement.classList.add('_form-focus')
-				targetElement.parentElement.classList.add('_form-focus')
-			}
-			targetElement.hasAttribute('data-validate') ? formValidate.removeError(targetElement) : null
-		}
-	})
-	document.body.addEventListener('focusout', function (e) {
-		const targetElement = e.target
-		if (targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA') {
-			if (!targetElement.hasAttribute('data-no-focus-classes')) {
-				targetElement.classList.remove('_form-focus')
-				targetElement.parentElement.classList.remove('_form-focus')
-			}
-			// Моментальная валидация
-			targetElement.hasAttribute('data-validate') ? formValidate.validateInput(targetElement) : null
-		}
-	})
-	// Если включено, добавляем функционал "Показать пароль"
-	if (options.viewPass) {
-		document.addEventListener('click', function (e) {
-			let targetElement = e.target
-			if (targetElement.closest('[class*="__viewpass"]')) {
-				let inputType = targetElement.classList.contains('_viewpass-active') ? 'password' : 'text'
-				targetElement.parentElement.querySelector('input').setAttribute('type', inputType)
-				targetElement.classList.toggle('_viewpass-active')
-			}
-		})
-	}
-	// Если включено, добавляем функционал "Автовысота"
-	if (options.autoHeight) {
-		const textareas = document.querySelectorAll('textarea[data-autoheight]')
-		if (textareas.length) {
-			textareas.forEach((textarea) => {
-				const startHeight = textarea.hasAttribute('data-autoheight-min')
-					? Number(textarea.dataset.autoheightMin)
-					: Number(textarea.offsetHeight)
-				const maxHeight = textarea.hasAttribute('data-autoheight-max')
-					? Number(textarea.dataset.autoheightMax)
-					: Infinity
-				setHeight(textarea, Math.min(startHeight, maxHeight))
-				textarea.addEventListener('input', () => {
-					if (textarea.scrollHeight > startHeight) {
-						textarea.style.height = `auto`
-						setHeight(textarea, Math.min(Math.max(textarea.scrollHeight, startHeight), maxHeight))
-					}
-				})
-			})
-			function setHeight(textarea, height) {
-				textarea.style.height = `${height}px`
-			}
-		}
-	}
-}
 // Валидация форм
-export let formValidate = {
+export const formValidate = {
 	getErrors(form) {
 		let error = 0
-		let formRequiredItems = form.querySelectorAll('*[data-required]')
+		const formRequiredItems = form.querySelectorAll('*[data-required]')
 		if (formRequiredItems.length) {
 			formRequiredItems.forEach((formRequiredItem) => {
 				if (
@@ -103,8 +45,10 @@ export let formValidate = {
 	addError(formRequiredItem) {
 		formRequiredItem.classList.add('_form-error')
 		formRequiredItem.parentElement.classList.add('_form-error')
-		let inputError = formRequiredItem.parentElement.querySelector('.form__error')
-		if (inputError) formRequiredItem.parentElement.removeChild(inputError)
+		const inputError = formRequiredItem.parentElement.querySelector('.form__error')
+		if (inputError) {
+			formRequiredItem.parentElement.removeChild(inputError)
+		}
 		if (formRequiredItem.dataset.error) {
 			formRequiredItem.parentElement.insertAdjacentHTML(
 				'beforeend',
@@ -122,14 +66,14 @@ export let formValidate = {
 	formClean(form) {
 		form.reset()
 		setTimeout(() => {
-			let inputs = form.querySelectorAll('input,textarea')
+			const inputs = form.querySelectorAll('input,textarea')
 			for (let index = 0; index < inputs.length; index++) {
 				const el = inputs[index]
 				el.parentElement.classList.remove('_form-focus')
 				el.classList.remove('_form-focus')
 				formValidate.removeError(el)
 			}
-			let checkboxes = form.querySelectorAll('.checkbox__input')
+			const checkboxes = form.querySelectorAll('.checkbox__input')
 			if (checkboxes.length > 0) {
 				for (let index = 0; index < checkboxes.length; index++) {
 					const checkbox = checkboxes[index]
@@ -137,7 +81,7 @@ export let formValidate = {
 				}
 			}
 			if (flsModules.select) {
-				let selects = form.querySelectorAll('.select')
+				const selects = form.querySelectorAll('.select')
 				if (selects.length) {
 					for (let index = 0; index < selects.length; index++) {
 						const select = selects[index].querySelector('select')
@@ -148,19 +92,80 @@ export let formValidate = {
 		}, 0)
 	},
 	emailTest(formRequiredItem) {
+		// eslint-disable-next-line regexp/no-unused-capturing-group, regexp/no-useless-escape, regexp/no-super-linear-backtracking, regexp/optimal-quantifier-concatenation
 		return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(formRequiredItem.value)
 	},
 }
+
+export function formFieldsInit(options = { viewPass: false, autoHeight: false }) {
+	document.body.addEventListener('focusin', (e) => {
+		const targetElement = e.target
+		if (targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA') {
+			if (!targetElement.hasAttribute('data-no-focus-classes')) {
+				targetElement.classList.add('_form-focus')
+				targetElement.parentElement.classList.add('_form-focus')
+			}
+			targetElement.hasAttribute('data-validate') ? formValidate.removeError(targetElement) : null
+		}
+	})
+	document.body.addEventListener('focusout', (e) => {
+		const targetElement = e.target
+		if (targetElement.tagName === 'INPUT' || targetElement.tagName === 'TEXTAREA') {
+			if (!targetElement.hasAttribute('data-no-focus-classes')) {
+				targetElement.classList.remove('_form-focus')
+				targetElement.parentElement.classList.remove('_form-focus')
+			}
+			// Моментальная валидация
+			targetElement.hasAttribute('data-validate') ? formValidate.validateInput(targetElement) : null
+		}
+	})
+	// Если включено, добавляем функционал "Показать пароль"
+	if (options.viewPass) {
+		document.addEventListener('click', (e) => {
+			const targetElement = e.target
+			if (targetElement.closest('[class*="__viewpass"]')) {
+				const inputType = targetElement.classList.contains('_viewpass-active') ? 'password' : 'text'
+				targetElement.parentElement.querySelector('input').setAttribute('type', inputType)
+				targetElement.classList.toggle('_viewpass-active')
+			}
+		})
+	}
+	// Если включено, добавляем функционал "Автовысота"
+	if (options.autoHeight) {
+		const textareas = document.querySelectorAll('textarea[data-autoheight]')
+		if (textareas.length) {
+			textareas.forEach((textarea) => {
+				const startHeight = textarea.hasAttribute('data-autoheight-min')
+					? Number(textarea.dataset.autoheightMin)
+					: Number(textarea.offsetHeight)
+				const maxHeight = textarea.hasAttribute('data-autoheight-max')
+					? Number(textarea.dataset.autoheightMax)
+					: Infinity
+				setHeight(textarea, Math.min(startHeight, maxHeight))
+				textarea.addEventListener('input', () => {
+					if (textarea.scrollHeight > startHeight) {
+						textarea.style.height = `auto`
+						setHeight(textarea, Math.min(Math.max(textarea.scrollHeight, startHeight), maxHeight))
+					}
+				})
+			})
+			function setHeight(textarea, height) {
+				textarea.style.height = `${height}px`
+			}
+		}
+	}
+}
+
 /* Отправка форм */
 export function formSubmit() {
 	const forms = document.forms
 	if (forms.length) {
 		for (const form of forms) {
-			form.addEventListener('submit', function (e) {
+			form.addEventListener('submit', (e) => {
 				const form = e.target
 				formSubmitAction(form, e)
 			})
-			form.addEventListener('reset', function (e) {
+			form.addEventListener('reset', (e) => {
 				const form = e.target
 				formValidate.formClean(form)
 			})
@@ -183,11 +188,10 @@ export function formSubmit() {
 					body: formData,
 				})
 				if (response.ok) {
-					let responseResult = await response.json()
+					const responseResult = await response.json()
 					form.classList.remove('_sending')
 					formSent(form, responseResult)
 				} else {
-					alert('Помилка')
 					form.classList.remove('_sending')
 				}
 			} else if (form.hasAttribute('data-dev')) {
@@ -204,12 +208,12 @@ export function formSubmit() {
 		}
 	}
 	// Действия после отправки формы
-	function formSent(form, responseResult = ``) {
+	function formSent(form) {
 		// Создаем событие отправки формы
 		document.dispatchEvent(
 			new CustomEvent('formSent', {
 				detail: {
-					form: form,
+					form,
 				},
 			})
 		)
@@ -232,11 +236,11 @@ export function formSubmit() {
 }
 /* Модуь формы "колличество" */
 export function formQuantity() {
-	document.addEventListener('click', function (e) {
-		let targetElement = e.target
+	document.addEventListener('click', (e) => {
+		const targetElement = e.target
 		if (targetElement.closest('[data-quantity-plus]') || targetElement.closest('[data-quantity-minus]')) {
 			const valueElement = targetElement.closest('[data-quantity]').querySelector('[data-quantity-value]')
-			let value = parseInt(valueElement.value)
+			let value = Number.parseInt(valueElement.value)
 			if (targetElement.hasAttribute('data-quantity-plus')) {
 				value++
 				if (+valueElement.dataset.quantityMax && +valueElement.dataset.quantityMax < value) {
@@ -295,17 +299,17 @@ export function formRating() {
 			const ratingItems = rating.querySelectorAll('.rating__item')
 			for (let index = 0; index < ratingItems.length; index++) {
 				const ratingItem = ratingItems[index]
-				ratingItem.addEventListener('mouseenter', function (e) {
+				ratingItem.addEventListener('mouseenter', () => {
 					// Обновление переменных
 					initRatingVars(rating)
 					// Обновление активных звезд
 					setRatingActiveWidth(ratingItem.value)
 				})
-				ratingItem.addEventListener('mouseleave', function (e) {
+				ratingItem.addEventListener('mouseleave', () => {
 					// Обновление активных звезд
 					setRatingActiveWidth()
 				})
-				ratingItem.addEventListener('click', function (e) {
+				ratingItem.addEventListener('click', () => {
 					// Обновление переменных
 					initRatingVars(rating)
 
@@ -325,15 +329,15 @@ export function formRating() {
 				rating.classList.add('rating_sending')
 
 				// Отправика данных (value) на сервер
-				let response = await fetch('rating.json', {
+				const response = await fetch('rating.json', {
 					method: 'GET',
 
-					//body: JSON.stringify({
+					// body: JSON.stringify({
 					//	userRating: value
-					//}),
-					//headers: {
+					// }),
+					// headers: {
 					//	'content-type': 'application/json'
-					//}
+					// }
 				})
 				if (response.ok) {
 					const result = await response.json()
@@ -349,8 +353,6 @@ export function formRating() {
 
 					rating.classList.remove('rating_sending')
 				} else {
-					alert('Ошибка')
-
 					rating.classList.remove('rating_sending')
 				}
 			}

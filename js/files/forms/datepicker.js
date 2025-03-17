@@ -1,6 +1,5 @@
-import { flsModules } from '../modules.js'
-
 import datepicker from 'js-datepicker'
+import { flsModules } from '../modules.js'
 import 'js-datepicker/src/datepicker'
 
 if (document.querySelector('[data-datepicker]')) {
@@ -10,11 +9,10 @@ if (document.querySelector('[data-datepicker]')) {
 		overlayButton: 'Применить',
 		overlayPlaceholder: 'Год (4 цифры)',
 		startDay: 1,
-		formatter: (input, date, instance) => {
+		formatter: (input, date) => {
 			const value = date.toLocaleDateString()
 			input.value = value
 		},
-		onSelect: function (input, instance, date) {},
 	})
 	flsModules.datepicker = picker
 }

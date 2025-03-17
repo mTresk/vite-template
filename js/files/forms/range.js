@@ -2,10 +2,10 @@ import * as noUiSlider from 'nouislider'
 import '../../../scss/base/forms/range.scss'
 
 export function rangeInit() {
-	const priceSlider = document.querySelector('#range')
+	const priceSlider = document.querySelector('[data-range-slider]')
 	if (priceSlider) {
-		let from = priceSlider.getAttribute('data-from')
-		let to = priceSlider.getAttribute('data-to')
+		const from = priceSlider.getAttribute('data-range-slider-from')
+		const to = priceSlider.getAttribute('data-range-slider-to')
 
 		noUiSlider.create(priceSlider, {
 			start: [Number(from), Number(to)],
@@ -16,8 +16,8 @@ export function rangeInit() {
 			},
 		})
 
-		const priceStart = document.querySelector('.range-fiter__input--min input')
-		const priceEnd = document.querySelector('.range-fiter__input--max input')
+		const priceStart = document.querySelector('[data-range-slider-min]')
+		const priceEnd = document.querySelector('[data-range-slider-max]')
 
 		priceStart.value = from
 		priceEnd.value = to
@@ -28,17 +28,17 @@ export function rangeInit() {
 		function setPriceValues() {
 			let priceStartValue
 			let priceEndValue
-			if (priceStart.value != '') {
+			if (priceStart.value !== '') {
 				priceStartValue = priceStart.value
 			}
-			if (priceEnd.value != '') {
+			if (priceEnd.value !== '') {
 				priceEndValue = priceEnd.value
 			}
 			priceSlider.noUiSlider.set([priceStartValue, priceEndValue])
 		}
 
 		function setValue() {
-			let sliderValueNumber = priceSlider.noUiSlider.get(true)
+			const sliderValueNumber = priceSlider.noUiSlider.get(true)
 
 			priceStart.value = Math.round(sliderValueNumber[0])
 			priceEnd.value = Math.round(sliderValueNumber[1])

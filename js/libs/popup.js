@@ -1,9 +1,9 @@
-import { isMobile, bodyLockStatus, bodyLock, bodyUnlock, bodyLockToggle, FLS } from '../files/functions.js'
+import { bodyLock, bodyLockStatus, bodyUnlock, FLS } from '../files/functions.js'
 import { flsModules } from '../files/modules.js'
 
 class Popup {
 	constructor(options) {
-		let config = {
+		const config = {
 			logging: true,
 			init: true,
 			// Для кнопок
@@ -32,10 +32,10 @@ class Popup {
 			},
 			on: {
 				// События
-				beforeOpen: function () {},
-				afterOpen: function () {},
-				beforeClose: function () {},
-				afterClose: function () {},
+				beforeOpen() {},
+				afterOpen() {},
+				beforeClose() {},
+				afterClose() {},
 			},
 		}
 		this.vkCode
@@ -75,7 +75,7 @@ class Popup {
 			'[contenteditable]',
 			'[tabindex]:not([tabindex^="-"])',
 		]
-		//this.options = Object.assign(config, options);
+		// this.options = Object.assign(config, options);
 		this.options = {
 			...config,
 			...options,
@@ -95,64 +95,63 @@ class Popup {
 		this.bodyLock = false
 		this.options.init ? this.initPopups() : null
 	}
+
 	initPopups() {
 		this.popupLogging(`Проснулся`)
 		this.eventsPopup()
 	}
+
 	eventsPopup() {
 		// Клик на всем документе
-		document.addEventListener(
-			'click',
-			function (e) {
-				// Клик по кнопке "открыть"
-				const buttonOpen = e.target.closest(`[${this.options.attributeOpenButton}]`)
-				if (buttonOpen) {
-					e.preventDefault()
-					this._dataValue = buttonOpen.getAttribute(this.options.attributeOpenButton)
-						? buttonOpen.getAttribute(this.options.attributeOpenButton)
-						: 'error'
-					this.vkCode = buttonOpen.getAttribute(this.options.vkAttribute)
-						? buttonOpen.getAttribute(this.options.vkAttribute)
-						: null
-					if (this._dataValue !== 'error') {
-						if (!this.isOpen) this.lastFocusEl = buttonOpen
-						this.targetOpen.selector = `${this._dataValue}`
-						this._selectorOpen = true
-						this.open()
-						return
-					} else this.popupLogging(`Ой, не заполнен атрибут у  ${buttonOpen.classList}`)
+		document.addEventListener('click', (e) => {
+			// Клик по кнопке "открыть"
+			const buttonOpen = e.target.closest(`[${this.options.attributeOpenButton}]`)
+			if (buttonOpen) {
+				e.preventDefault()
+				this._dataValue = buttonOpen.getAttribute(this.options.attributeOpenButton)
+					? buttonOpen.getAttribute(this.options.attributeOpenButton)
+					: 'error'
+				this.vkCode = buttonOpen.getAttribute(this.options.vkAttribute)
+					? buttonOpen.getAttribute(this.options.vkAttribute)
+					: null
+				if (this._dataValue !== 'error') {
+					if (!this.isOpen) {
+						this.lastFocusEl = buttonOpen
+					}
+					this.targetOpen.selector = `${this._dataValue}`
+					this._selectorOpen = true
+					this.open()
+					return
+				} else {
+					this.popupLogging(`Ой, не заполнен атрибут у  ${buttonOpen.classList}`)
+				}
 
-					return
-				}
-				// Закрытие на пустом месте (popup__wrapper) и кнопки закрытия (popup__close) для закрытия
-				const buttonClose = e.target.closest(`[${this.options.attributeCloseButton}]`)
-				if (buttonClose || (!e.target.closest(`.${this.options.classes.popupContent}`) && this.isOpen)) {
-					e.preventDefault()
-					this.close()
-					return
-				}
-			}.bind(this)
-		)
+				return
+			}
+			// Закрытие на пустом месте (popup__wrapper) и кнопки закрытия (popup__close) для закрытия
+			const buttonClose = e.target.closest(`[${this.options.attributeCloseButton}]`)
+			if (buttonClose || (!e.target.closest(`.${this.options.classes.popupContent}`) && this.isOpen)) {
+				e.preventDefault()
+				this.close()
+			}
+		})
 		// Закрытие по ESC
-		document.addEventListener(
-			'keydown',
-			function (e) {
-				if (this.options.closeEsc && e.which == 27 && e.code === 'Escape' && this.isOpen) {
-					e.preventDefault()
-					this.close()
-					return
-				}
-				if (this.options.focusCatch && e.which == 9 && this.isOpen) {
-					this._focusCatch(e)
-					return
-				}
-			}.bind(this)
-		)
+		document.addEventListener('keydown', (e) => {
+			if (this.options.closeEsc && e.which === 27 && e.code === 'Escape' && this.isOpen) {
+				e.preventDefault()
+				this.close()
+				return
+			}
+			if (this.options.focusCatch && e.which === 9 && this.isOpen) {
+				this._focusCatch(e)
+			}
+		})
 	}
+
 	open(selectorValue) {
 		if (bodyLockStatus) {
 			// Если перед открытием попапа был режим lock
-			this.bodyLock = document.documentElement.classList.contains('lock') && !this.isOpen ? true : false
+			this.bodyLock = !!(document.documentElement.classList.contains('lock') && !this.isOpen)
 
 			// Если ввести значение селектора (селектор настраивается в options)
 			if (selectorValue && typeof selectorValue === 'string' && selectorValue.trim() !== '') {
@@ -163,8 +162,12 @@ class Popup {
 				this._reopen = true
 				this.close()
 			}
-			if (!this._selectorOpen) this.targetOpen.selector = this.lastClosed.selector
-			if (!this._reopen) this.previousActiveElement = document.activeElement
+			if (!this._selectorOpen) {
+				this.targetOpen.selector = this.lastClosed.selector
+			}
+			if (!this._reopen) {
+				this.previousActiveElement = document.activeElement
+			}
 
 			this.targetOpen.element = document.querySelector(this.targetOpen.selector)
 
@@ -197,7 +200,9 @@ class Popup {
 
 				if (!this._reopen) {
 					!this.bodyLock ? bodyLock() : null
-				} else this._reopen = false
+				} else {
+					this._reopen = false
+				}
 
 				this.targetOpen.element.setAttribute('aria-hidden', 'false')
 
@@ -224,9 +229,12 @@ class Popup {
 					})
 				)
 				this.popupLogging(`Открыл попап`)
-			} else this.popupLogging(`Ой ой, такого попапа нет. Проверьте корректность ввода. `)
+			} else {
+				this.popupLogging(`Ой ой, такого попапа нет. Проверьте корректность ввода. `)
+			}
 		}
 	}
+
 	close(selectorValue) {
 		if (selectorValue && typeof selectorValue === 'string' && selectorValue.trim() !== '') {
 			this.previousOpen.selector = selectorValue
@@ -290,6 +298,7 @@ class Popup {
 			e.preventDefault()
 		}
 	}
+
 	_focusTrap() {
 		const focusable = this.previousOpen.element.querySelectorAll(this._focusEl)
 		if (!this.isOpen && this.lastFocusEl) {
@@ -298,6 +307,7 @@ class Popup {
 			focusable[0].focus()
 		}
 	}
+
 	// Функция вывода в консоль
 	popupLogging(message) {
 		this.options.logging ? FLS(`[Попап]: ${message}`) : null

@@ -26,8 +26,8 @@ data-prlx-a="скорость анимации"				50							большее зн�
 	left: -15%;
 */
 class MousePRLX {
-	constructor(props, data = null) {
-		let defaultConfig = {
+	constructor(props) {
+		const defaultConfig = {
 			init: true,
 			logging: true,
 		}
@@ -42,6 +42,7 @@ class MousePRLX {
 			}
 		}
 	}
+
 	paralaxMouseInit(paralaxMouse) {
 		paralaxMouse.forEach((el) => {
 			const paralaxMouseWrapper = el.closest('[data-prlx-mouse-wrapper]')
@@ -58,10 +59,10 @@ class MousePRLX {
 			const paramAnimation = el.dataset.prlxA ? +el.dataset.prlxA : 50
 
 			// Объявление переменных
-			let positionX = 0,
-				positionY = 0
-			let coordXprocent = 0,
-				coordYprocent = 0
+			let positionX = 0
+			let positionY = 0
+			let coordXprocent = 0
+			let coordYprocent = 0
 
 			setMouseParallaxStyle()
 
@@ -81,7 +82,7 @@ class MousePRLX {
 				requestAnimationFrame(setMouseParallaxStyle)
 			}
 			function mouseMoveParalax(wrapper = window) {
-				wrapper.addEventListener('mousemove', function (e) {
+				wrapper.addEventListener('mousemove', (e) => {
 					const offsetTop = el.getBoundingClientRect().top + window.scrollY
 					if (offsetTop >= window.scrollY || offsetTop + el.offsetHeight >= window.scrollY) {
 						// Получение ширины и высоты блока
@@ -98,6 +99,7 @@ class MousePRLX {
 			}
 		})
 	}
+
 	// Логгирование в консоль
 	setLogging(message) {
 		this.config.logging ? FLS(`[PRLX Mouse]: ${message}`) : null

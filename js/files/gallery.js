@@ -1,16 +1,16 @@
-import { flsModules } from './modules.js'
 import lightGallery from 'lightgallery'
+import { flsModules } from './modules.js'
 import 'lightgallery/css/lightgallery.css'
 
 // Плагины
 // lgZoom, lgAutoplay, lgComment, lgFullscreen, lgHash, lgPager, lgRotate, lgShare, lgThumbnail, lgVideo, lgMediumZoom
 // import lgThumbnail from 'lightgallery/plugins/thumbnail/lg-thumbnail.min.js'
-//import lgZoom from 'lightgallery/plugins/zoom/lg-zoom.min.js'
+// import lgZoom from 'lightgallery/plugins/zoom/lg-zoom.min.js'
 
 // Запуск
 const galleries = document.querySelectorAll('[data-gallery]')
 if (galleries.length) {
-	let galleyItems = []
+	const galleyItems = []
 	galleries.forEach((gallery) => {
 		galleyItems.push({
 			gallery,

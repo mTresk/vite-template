@@ -2,6 +2,7 @@ class DynamicAdapt {
 	constructor(type) {
 		this.type = type
 	}
+
 	init() {
 		// массив объектов
 		this.оbjects = []
@@ -45,6 +46,7 @@ class DynamicAdapt {
 			this.mediaHandler(matchMedia, оbjectsFilter)
 		})
 	}
+
 	// Основна функция
 	mediaHandler(matchMedia, оbjects) {
 		if (matchMedia.matches) {
@@ -60,6 +62,7 @@ class DynamicAdapt {
 			})
 		}
 	}
+
 	// Функция перемещения
 	moveTo(place, element, destination) {
 		element.classList.add(this.daClassname)
@@ -73,6 +76,7 @@ class DynamicAdapt {
 		}
 		destination.children[place].before(element)
 	}
+
 	// Функция возврата
 	moveBack(parent, element, index) {
 		element.classList.remove(this.daClassname)
@@ -82,10 +86,12 @@ class DynamicAdapt {
 			parent.append(element)
 		}
 	}
+
 	// Функция получения индекса внутри родителя
 	indexInParent(parent, element) {
 		return [...parent.children].indexOf(element)
 	}
+
 	// Функция сортировки массива по breakpoint и place
 	// по возрастанию для this.type = min
 	// по убыванию для this.type = max
@@ -122,7 +128,6 @@ class DynamicAdapt {
 				}
 				return b.breakpoint - a.breakpoint
 			})
-			return
 		}
 	}
 }

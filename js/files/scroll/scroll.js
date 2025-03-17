@@ -1,6 +1,7 @@
-import { isMobile, getHash, menuClose } from '../functions.js'
 import { flsModules } from '../../files/modules.js'
+import { getHash, menuClose } from '../functions.js'
 import { gotoBlock } from './gotoblock.js'
+
 let addWindowScrollEvent = false
 
 export function pageNavigation() {
@@ -19,9 +20,9 @@ export function pageNavigation() {
 			if (targetElement.closest('[data-goto]')) {
 				const gotoLink = targetElement.closest('[data-goto]')
 				const gotoLinkSelector = gotoLink.dataset.goto ? gotoLink.dataset.goto : ''
-				const noHeader = gotoLink.hasAttribute('data-goto-header') ? true : false
+				const noHeader = !!gotoLink.hasAttribute('data-goto-header')
 				const gotoSpeed = gotoLink.dataset.gotoSpeed ? gotoLink.dataset.gotoSpeed : 500
-				const offsetTop = gotoLink.dataset.gotoTop ? parseInt(gotoLink.dataset.gotoTop) : 0
+				const offsetTop = gotoLink.dataset.gotoTop ? Number.parseInt(gotoLink.dataset.gotoTop) : 0
 				if (flsModules.fullpage) {
 					const fullpageSection = document.querySelector(`${gotoLinkSelector}`).closest('[data-fp-section]')
 					const fullpageSectionId = fullpageSection ? +fullpageSection.dataset.fpId : null
@@ -39,7 +40,6 @@ export function pageNavigation() {
 			const targetElement = entry.target
 			// Обработка пунктов навигации, если указано значение navigator подсвечиваем текущий пукт меню
 			if (targetElement.dataset.watch === 'navigator') {
-				const navigatorActiveItem = document.querySelector(`[data-goto]._navigator-active`)
 				let navigatorCurrentItem
 				if (targetElement.id && document.querySelector(`[data-goto="#${targetElement.id}"]`)) {
 					navigatorCurrentItem = document.querySelector(`[data-goto="#${targetElement.id}"]`)
@@ -83,7 +83,7 @@ export function headerScroll() {
 	const startPoint = header.dataset.scroll ? header.dataset.scroll : 1
 	let scrollDirection = 0
 	let timer
-	document.addEventListener('windowScroll', function (e) {
+	document.addEventListener('windowScroll', () => {
 		const scrollTop = window.scrollY
 		clearTimeout(timer)
 		if (scrollTop >= startPoint) {
@@ -119,7 +119,7 @@ export function digitsCounter() {
 	}
 
 	function digitsCountersInit(digitsCountersItems) {
-		let digitsCounters = digitsCountersItems ? digitsCountersItems : document.querySelectorAll('[data-digits-counter]')
+		const digitsCounters = digitsCountersItems || document.querySelectorAll('[data-digits-counter]')
 		if (digitsCounters.length) {
 			digitsCounters.forEach((digitsCounter) => {
 				digitsCountersAnimate(digitsCounter)
@@ -129,13 +129,15 @@ export function digitsCounter() {
 
 	function digitsCountersAnimate(digitsCounter) {
 		let startTimestamp = null
-		const duration = parseInt(digitsCounter.dataset.digitsCounterSpeed)
-			? parseInt(digitsCounter.dataset.digitsCounterSpeed)
+		const duration = Number.parseInt(digitsCounter.dataset.digitsCounterSpeed)
+			? Number.parseInt(digitsCounter.dataset.digitsCounterSpeed)
 			: 1000
-		const startValue = parseInt(digitsCounter.dataset.digitsCounter)
+		const startValue = Number.parseInt(digitsCounter.dataset.digitsCounter)
 		const startPosition = 0
 		const step = (timestamp) => {
-			if (!startTimestamp) startTimestamp = timestamp
+			if (!startTimestamp) {
+				startTimestamp = timestamp
+			}
 			const progress = Math.min((timestamp - startTimestamp) / duration, 1)
 			digitsCounter.innerHTML = Math.floor(progress * (startPosition + startValue))
 			if (progress < 1) {
@@ -166,10 +168,10 @@ export function stickyBlock() {
 		const stickyParents = document.querySelectorAll('[data-sticky]')
 		if (stickyParents.length) {
 			stickyParents.forEach((stickyParent) => {
-				let stickyConfig = {
-					media: stickyParent.dataset.sticky ? parseInt(stickyParent.dataset.sticky) : null,
-					top: stickyParent.dataset.stickyTop ? parseInt(stickyParent.dataset.stickyTop) : 0,
-					bottom: stickyParent.dataset.stickyBottom ? parseInt(stickyParent.dataset.stickyBottom) : 0,
+				const stickyConfig = {
+					media: stickyParent.dataset.sticky ? Number.parseInt(stickyParent.dataset.sticky) : null,
+					top: stickyParent.dataset.stickyTop ? Number.parseInt(stickyParent.dataset.stickyTop) : 0,
+					bottom: stickyParent.dataset.stickyBottom ? Number.parseInt(stickyParent.dataset.stickyBottom) : 0,
 					header: stickyParent.hasAttribute('data-sticky-header')
 						? document.querySelector('header.header').offsetHeight
 						: 0,
@@ -187,13 +189,13 @@ export function stickyBlock() {
 		document.addEventListener('windowScroll', stickyBlockActions)
 		window.addEventListener('resize', stickyBlockActions)
 
-		function stickyBlockActions(e) {
+		function stickyBlockActions() {
 			const endPoint =
 				stickyParent.offsetHeight +
 				stickyParent.getBoundingClientRect().top +
 				scrollY -
 				(offsetTop + stickyBlockItem.offsetHeight + stickyConfig.bottom)
-			let stickyItemValues = {
+			const stickyItemValues = {
 				position: 'relative',
 				bottom: 'auto',
 				top: '0px',
@@ -228,8 +230,8 @@ export function stickyBlock() {
 // При подключении модуля обработчик события запустится автоматически
 setTimeout(() => {
 	if (addWindowScrollEvent) {
-		let windowScroll = new Event('windowScroll')
-		window.addEventListener('scroll', function (e) {
+		const windowScroll = new Event('windowScroll')
+		window.addEventListener('scroll', () => {
 			document.dispatchEvent(windowScroll)
 		})
 	}

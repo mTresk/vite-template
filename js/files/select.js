@@ -12,6 +12,6 @@ function initSelects() {
 	}
 }
 
-window.addEventListener('DOMContentLoaded', function (e) {
+window.addEventListener('DOMContentLoaded', () => {
 	initSelects()
 })

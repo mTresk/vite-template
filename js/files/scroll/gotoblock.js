@@ -1,6 +1,6 @@
-import { isMobile, menuClose, getHash, FLS } from '../functions.js'
+import { FLS, menuClose } from '../functions.js'
 
-export let gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 0) => {
+export function gotoBlock(targetBlock, noHeader = false, speed = 500, offsetTop = 0) {
 	const targetBlockElement = document.querySelector(targetBlock)
 	if (targetBlockElement) {
 		let headerItem = ''
@@ -20,9 +20,9 @@ export let gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 
 				headerItemHeight = headerElement.offsetHeight
 			}
 		}
-		let options = {
+		const options = {
 			speedAsDuration: true,
-			speed: speed,
+			speed,
 			header: headerItem,
 			offset: offsetTop,
 			easing: 'easeOutQuad',
@@ -30,6 +30,7 @@ export let gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 
 		document.documentElement.classList.contains('menu-open') ? menuClose() : null
 
 		if (typeof SmoothScroll !== 'undefined') {
+			// eslint-disable-next-line no-undef
 			new SmoothScroll().animateScroll(targetBlockElement, '', options)
 		} else {
 			let targetBlockElementPosition = targetBlockElement.getBoundingClientRect().top + scrollY

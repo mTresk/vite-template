@@ -1,52 +1,35 @@
-import { flsModules } from './modules.js'
-
-/* Проверка поддержки webp, добавление класса webp или no-webp для HTML */
-export function isWebp() {
-	// Проверка поддержки webp
-	function testWebP(callback) {
-		let webP = new Image()
-		webP.onload = webP.onerror = function () {
-			callback(webP.height == 2)
-		}
-		webP.src =
-			'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA'
-	}
-	// Добавление класса webp или no-webp для HTML
-	testWebP(function (support) {
-		let className = support === true ? 'webp' : 'no-webp'
-		document.documentElement.classList.add(className)
-	})
-}
 /* Проверка мобильного браузера */
-export let isMobile = {
-	Android: function () {
+export const isMobile = {
+	Android() {
 		return navigator.userAgent.match(/Android/i)
 	},
-	BlackBerry: function () {
+	BlackBerry() {
 		return navigator.userAgent.match(/BlackBerry/i)
 	},
-	iOS: function () {
+	iOS() {
 		return navigator.userAgent.match(/iPhone|iPad|iPod/i)
 	},
-	Opera: function () {
+	Opera() {
 		return navigator.userAgent.match(/Opera Mini/i)
 	},
-	Windows: function () {
+	Windows() {
 		return navigator.userAgent.match(/IEMobile/i)
 	},
-	any: function () {
+	any() {
 		return isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows()
 	},
 }
 /* Добавление класса touch для HTML если браузер мобильный */
 export function addTouchClass() {
-	if (isMobile.any()) document.documentElement.classList.add('touch')
+	if (isMobile.any()) {
+		document.documentElement.classList.add('touch')
+	}
 }
 // Добавление loaded для HTML после полной загрузки страницы
 export function addLoadedClass() {
 	if (!document.documentElement.classList.contains('loading')) {
-		window.addEventListener('load', function () {
-			setTimeout(function () {
+		window.addEventListener('load', () => {
+			setTimeout(() => {
 				document.documentElement.classList.add('loaded')
 			}, 0)
 		})
@@ -69,18 +52,18 @@ export function fullVHfix() {
 	if (fullScreens.length && isMobile.any()) {
 		window.addEventListener('resize', fixHeight)
 		function fixHeight() {
-			let vh = window.innerHeight * 0.01
+			const vh = window.innerHeight * 0.01
 			document.documentElement.style.setProperty('--vh', `${vh}px`)
 		}
 		fixHeight()
 	}
 }
 // Вспомогательные модули плавного расскрытия и закрытия объекта ======================================================================================================================================================================
-export let _slideUp = (target, duration = 500, showmore = 0) => {
+export function _slideUp(target, duration = 500, showmore = 0) {
 	if (!target.classList.contains('_slide')) {
 		target.classList.add('_slide')
 		target.style.transitionProperty = 'height, margin, padding'
-		target.style.transitionDuration = duration + 'ms'
+		target.style.transitionDuration = `${duration}ms`
 		target.style.height = `${target.offsetHeight}px`
 		target.offsetHeight
 		target.style.overflow = 'hidden'
@@ -90,7 +73,7 @@ export let _slideUp = (target, duration = 500, showmore = 0) => {
 		target.style.marginTop = 0
 		target.style.marginBottom = 0
 		window.setTimeout(() => {
-			target.hidden = !showmore ? true : false
+			target.hidden = !showmore
 			!showmore ? target.style.removeProperty('height') : null
 			target.style.removeProperty('padding-top')
 			target.style.removeProperty('padding-bottom')
@@ -104,19 +87,19 @@ export let _slideUp = (target, duration = 500, showmore = 0) => {
 			document.dispatchEvent(
 				new CustomEvent('slideUpDone', {
 					detail: {
-						target: target,
+						target,
 					},
 				})
 			)
 		}, duration)
 	}
 }
-export let _slideDown = (target, duration = 500, showmore = 0) => {
+export function _slideDown(target, duration = 500, showmore = 0) {
 	if (!target.classList.contains('_slide')) {
 		target.classList.add('_slide')
 		target.hidden = target.hidden ? false : null
 		showmore ? target.style.removeProperty('height') : null
-		let height = target.offsetHeight
+		const height = target.offsetHeight
 		target.style.overflow = 'hidden'
 		target.style.height = showmore ? `${showmore}px` : `0px`
 		target.style.paddingTop = 0
@@ -125,8 +108,8 @@ export let _slideDown = (target, duration = 500, showmore = 0) => {
 		target.style.marginBottom = 0
 		target.offsetHeight
 		target.style.transitionProperty = 'height, margin, padding'
-		target.style.transitionDuration = duration + 'ms'
-		target.style.height = height + 'px'
+		target.style.transitionDuration = `${duration}ms`
+		target.style.height = `${height}px`
 		target.style.removeProperty('padding-top')
 		target.style.removeProperty('padding-bottom')
 		target.style.removeProperty('margin-top')
@@ -141,14 +124,14 @@ export let _slideDown = (target, duration = 500, showmore = 0) => {
 			document.dispatchEvent(
 				new CustomEvent('slideDownDone', {
 					detail: {
-						target: target,
+						target,
 					},
 				})
 			)
 		}, duration)
 	}
 }
-export let _slideToggle = (target, duration = 500) => {
+export function _slideToggle(target, duration = 500) {
 	if (target.hidden) {
 		return _slideDown(target, duration)
 	} else {
@@ -156,47 +139,49 @@ export let _slideToggle = (target, duration = 500) => {
 	}
 }
 // Вспомогательные модули блокировки прокрутки и скачка ====================================================================================================================================================================================================================================================================================
+// eslint-disable-next-line import/no-mutable-exports
 export let bodyLockStatus = true
-export let bodyLockToggle = (delay = 500) => {
-	if (document.documentElement.classList.contains('lock')) {
-		bodyUnlock(delay)
-	} else {
-		bodyLock(delay)
-	}
-}
-export let bodyUnlock = (delay = 500) => {
-	let body = document.querySelector('body')
+export function bodyUnlock(delay = 500) {
+	const body = document.querySelector('body')
 	if (bodyLockStatus) {
-		let lock_padding = document.querySelectorAll('[data-lp]')
+		const lockPadding = document.querySelectorAll('[data-lp]')
 		setTimeout(() => {
-			for (let index = 0; index < lock_padding.length; index++) {
-				const el = lock_padding[index]
+			for (let index = 0; index < lockPadding.length; index++) {
+				const el = lockPadding[index]
 				el.style.paddingRight = '0px'
 			}
 			body.style.paddingRight = '0px'
 			document.documentElement.classList.remove('lock')
 		}, delay)
 		bodyLockStatus = false
-		setTimeout(function () {
+		setTimeout(() => {
 			bodyLockStatus = true
 		}, delay)
 	}
 }
-export let bodyLock = (delay = 500) => {
-	let body = document.querySelector('body')
+export function bodyLock(delay = 500) {
+	const body = document.querySelector('body')
 	if (bodyLockStatus) {
-		let lock_padding = document.querySelectorAll('[data-lp]')
-		for (let index = 0; index < lock_padding.length; index++) {
-			const el = lock_padding[index]
-			el.style.paddingRight = window.innerWidth - document.querySelector('.wrapper').offsetWidth + 'px'
+		const lockPadding = document.querySelectorAll('[data-lp]')
+		for (let index = 0; index < lockPadding.length; index++) {
+			const el = lockPadding[index]
+			el.style.paddingRight = `${window.innerWidth - document.querySelector('.wrapper').offsetWidth}px`
 		}
-		body.style.paddingRight = window.innerWidth - document.querySelector('.wrapper').offsetWidth + 'px'
+		body.style.paddingRight = `${window.innerWidth - document.querySelector('.wrapper').offsetWidth}px`
 		document.documentElement.classList.add('lock')
 
 		bodyLockStatus = false
-		setTimeout(function () {
+		setTimeout(() => {
 			bodyLockStatus = true
 		}, delay)
+	}
+}
+
+export function bodyLockToggle(delay = 500) {
+	if (document.documentElement.classList.contains('lock')) {
+		bodyUnlock(delay)
+	} else {
+		bodyLock(delay)
 	}
 }
 // Модуль работы со спойлерами =======================================================================================================================================================================================================================
@@ -204,7 +189,7 @@ export function spoilers() {
 	const spoilersArray = document.querySelectorAll('[data-spoilers]')
 	if (spoilersArray.length > 0) {
 		// Получение обычных слойлеров
-		const spoilersRegular = Array.from(spoilersArray).filter(function (item, index, self) {
+		const spoilersRegular = Array.from(spoilersArray).filter((item) => {
 			return !item.dataset.spoilers.split(',')[0]
 		})
 		// Инициализация обычных слойлеров
@@ -212,11 +197,11 @@ export function spoilers() {
 			initSpoilers(spoilersRegular)
 		}
 		// Получение слойлеров с медиа запросами
-		let mdQueriesArray = dataMediaQueries(spoilersArray, 'spoilers')
+		const mdQueriesArray = dataMediaQueries(spoilersArray, 'spoilers')
 		if (mdQueriesArray && mdQueriesArray.length) {
 			mdQueriesArray.forEach((mdQueriesItem) => {
 				// Подія
-				mdQueriesItem.matchMedia.addEventListener('change', function () {
+				mdQueriesItem.matchMedia.addEventListener('change', () => {
 					initSpoilers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
 				})
 				initSpoilers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
@@ -241,7 +226,9 @@ export function spoilers() {
 		function initSpoilerBody(spoilersBlock, hideSpoilerBody = true) {
 			let spoilerTitles = spoilersBlock.querySelectorAll('[data-spoiler]')
 			if (spoilerTitles.length) {
-				spoilerTitles = Array.from(spoilerTitles).filter((item) => item.closest('[data-spoilers]') === spoilersBlock)
+				spoilerTitles = Array.from(spoilerTitles).filter((item) => {
+					return item.closest('[data-spoilers]') === spoilersBlock
+				})
 				spoilerTitles.forEach((spoilerTitle) => {
 					if (hideSpoilerBody) {
 						spoilerTitle.removeAttribute('tabindex')
@@ -256,12 +243,15 @@ export function spoilers() {
 			}
 		}
 		function setSpoilerAction(e) {
+			e.preventDefault()
 			const el = e.target
 			if (el.closest('[data-spoiler]')) {
 				const spoilerTitle = el.closest('[data-spoiler]')
 				const spoilersBlock = spoilerTitle.closest('[data-spoilers]')
 				const oneSpoiler = spoilersBlock.hasAttribute('data-one-spoiler')
-				const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed ? parseInt(spoilersBlock.dataset.spoilersSpeed) : 500
+				const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
+					? Number.parseInt(spoilersBlock.dataset.spoilersSpeed)
+					: 500
 				if (!spoilersBlock.querySelectorAll('._slide').length) {
 					if (oneSpoiler && !spoilerTitle.classList.contains('_spoiler-active')) {
 						hideSpoilersBody(spoilersBlock)
@@ -269,12 +259,13 @@ export function spoilers() {
 					spoilerTitle.classList.toggle('_spoiler-active')
 					_slideToggle(spoilerTitle.nextElementSibling, spoilerSpeed)
 				}
-				e.preventDefault()
 			}
 		}
 		function hideSpoilersBody(spoilersBlock) {
 			const spoilerActiveTitle = spoilersBlock.querySelector('[data-spoiler]._spoiler-active')
-			const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed ? parseInt(spoilersBlock.dataset.spoilersSpeed) : 500
+			const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
+				? Number.parseInt(spoilersBlock.dataset.spoilersSpeed)
+				: 500
 			if (spoilerActiveTitle && !spoilersBlock.querySelectorAll('._slide').length) {
 				spoilerActiveTitle.classList.remove('_spoiler-active')
 				_slideUp(spoilerActiveTitle.nextElementSibling, spoilerSpeed)
@@ -283,14 +274,14 @@ export function spoilers() {
 		// Закрытие при клике вне спойлера
 		const spoilersClose = document.querySelectorAll('[data-spoiler-close]')
 		if (spoilersClose.length) {
-			document.addEventListener('click', function (e) {
+			document.addEventListener('click', (e) => {
 				const el = e.target
 				if (!el.closest('[data-spoilers]')) {
 					spoilersClose.forEach((spoilerClose) => {
 						const spoilersBlock = spoilerClose.closest('[data-spoilers]')
 						if (spoilersBlock.classList.contains('_spoiler-init')) {
 							const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
-								? parseInt(spoilersBlock.dataset.spoilersSpeed)
+								? Number.parseInt(spoilersBlock.dataset.spoilersSpeed)
 								: 500
 							spoilerClose.classList.remove('_spoiler-active')
 							_slideUp(spoilerClose.nextElementSibling, spoilerSpeed)
@@ -325,11 +316,11 @@ export function tabs() {
 		})
 
 		// Получение слойлеров с медиа запросами
-		let mdQueriesArray = dataMediaQueries(tabs, 'tabs')
+		const mdQueriesArray = dataMediaQueries(tabs, 'tabs')
 		if (mdQueriesArray && mdQueriesArray.length) {
 			mdQueriesArray.forEach((mdQueriesItem) => {
 				// Подія
-				mdQueriesItem.matchMedia.addEventListener('change', function () {
+				mdQueriesItem.matchMedia.addEventListener('change', () => {
 					setTitlePosition(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
 				})
 				setTitlePosition(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
@@ -340,12 +331,16 @@ export function tabs() {
 	function setTitlePosition(tabsMediaArray, matchMedia) {
 		tabsMediaArray.forEach((tabsMediaItem) => {
 			tabsMediaItem = tabsMediaItem.item
-			let tabsTitles = tabsMediaItem.querySelector('[data-tabs-titles]')
+			const tabsTitles = tabsMediaItem.querySelector('[data-tabs-titles]')
 			let tabsTitleItems = tabsMediaItem.querySelectorAll('[data-tabs-title]')
-			let tabsContent = tabsMediaItem.querySelector('[data-tabs-body]')
+			const tabsContent = tabsMediaItem.querySelector('[data-tabs-body]')
 			let tabsContentItems = tabsMediaItem.querySelectorAll('[data-tabs-item]')
-			tabsTitleItems = Array.from(tabsTitleItems).filter((item) => item.closest('[data-tabs]') === tabsMediaItem)
-			tabsContentItems = Array.from(tabsContentItems).filter((item) => item.closest('[data-tabs]') === tabsMediaItem)
+			tabsTitleItems = Array.from(tabsTitleItems).filter((item) => {
+				return item.closest('[data-tabs]') === tabsMediaItem
+			})
+			tabsContentItems = Array.from(tabsContentItems).filter((item) => {
+				return item.closest('[data-tabs]') === tabsMediaItem
+			})
 			tabsContentItems.forEach((tabsContentItem, index) => {
 				if (matchMedia.matches) {
 					tabsContent.append(tabsTitleItems[index])
@@ -363,20 +358,24 @@ export function tabs() {
 		let tabsTitles = tabsBlock.querySelectorAll('[data-tabs-titles]>*')
 		let tabsContent = tabsBlock.querySelectorAll('[data-tabs-body]>*')
 		const tabsBlockIndex = tabsBlock.dataset.tabsIndex
-		const tabsActiveHashBlock = tabsActiveHash[0] == tabsBlockIndex
+		const tabsActiveHashBlock = tabsActiveHash[0] === tabsBlockIndex
 
 		if (tabsActiveHashBlock) {
 			const tabsActiveTitle = tabsBlock.querySelector('[data-tabs-titles]>._tab-active')
 			tabsActiveTitle ? tabsActiveTitle.classList.remove('_tab-active') : null
 		}
 		if (tabsContent.length) {
-			tabsContent = Array.from(tabsContent).filter((item) => item.closest('[data-tabs]') === tabsBlock)
-			tabsTitles = Array.from(tabsTitles).filter((item) => item.closest('[data-tabs]') === tabsBlock)
+			tabsContent = Array.from(tabsContent).filter((item) => {
+				return item.closest('[data-tabs]') === tabsBlock
+			})
+			tabsTitles = Array.from(tabsTitles).filter((item) => {
+				return item.closest('[data-tabs]') === tabsBlock
+			})
 			tabsContent.forEach((tabsContentItem, index) => {
 				tabsTitles[index].setAttribute('data-tabs-title', '')
 				tabsContentItem.setAttribute('data-tabs-item', '')
 
-				if (tabsActiveHashBlock && index == tabsActiveHash[1]) {
+				if (tabsActiveHashBlock && index === tabsActiveHash[1]) {
 					tabsTitles[index].classList.add('_tab-active')
 				}
 				tabsContentItem.hidden = !tabsTitles[index].classList.contains('_tab-active')
@@ -395,8 +394,12 @@ export function tabs() {
 		const tabsBlockAnimate = isTabsAnamate(tabsBlock)
 		if (tabsContent.length > 0) {
 			const isHash = tabsBlock.hasAttribute('data-tabs-hash')
-			tabsContent = Array.from(tabsContent).filter((item) => item.closest('[data-tabs]') === tabsBlock)
-			tabsTitles = Array.from(tabsTitles).filter((item) => item.closest('[data-tabs]') === tabsBlock)
+			tabsContent = Array.from(tabsContent).filter((item) => {
+				return item.closest('[data-tabs]') === tabsBlock
+			})
+			tabsTitles = Array.from(tabsTitles).filter((item) => {
+				return item.closest('[data-tabs]') === tabsBlock
+			})
 			tabsContent.forEach((tabsContentItem, index) => {
 				if (tabsTitles[index].classList.contains('_tab-active')) {
 					if (tabsBlockAnimate) {
@@ -425,7 +428,9 @@ export function tabs() {
 			if (!tabTitle.classList.contains('_tab-active') && !tabsBlock.querySelector('._slide')) {
 				let tabActiveTitle = tabsBlock.querySelectorAll('[data-tabs-title]._tab-active')
 				tabActiveTitle.length
-					? (tabActiveTitle = Array.from(tabActiveTitle).filter((item) => item.closest('[data-tabs]') === tabsBlock))
+					? (tabActiveTitle = Array.from(tabActiveTitle).filter((item) => {
+							return item.closest('[data-tabs]') === tabsBlock
+						}))
 					: null
 				tabActiveTitle.length ? tabActiveTitle[0].classList.remove('_tab-active') : null
 				tabTitle.classList.add('_tab-active')
@@ -438,7 +443,7 @@ export function tabs() {
 // Модуль работы с меню (бургер) =======================================================================================================================================================================================================================
 export function menuInit() {
 	if (document.querySelector('[data-menu-button]')) {
-		document.addEventListener('click', function (e) {
+		document.addEventListener('click', (e) => {
 			if (bodyLockStatus && e.target.closest('[data-menu-button]')) {
 				bodyLockToggle()
 				document.documentElement.classList.toggle('menu-open')
@@ -456,13 +461,13 @@ export function menuClose() {
 }
 // Модуль "показать еще" =======================================================================================================================================================================================================================
 export function showMore() {
-	window.addEventListener('load', function (e) {
+	window.addEventListener('load', () => {
 		const showMoreBlocks = document.querySelectorAll('[data-showmore]')
 		let showMoreBlocksRegular
 		let mdQueriesArray
 		if (showMoreBlocks.length) {
 			// Получение обычных объектов
-			showMoreBlocksRegular = Array.from(showMoreBlocks).filter(function (item, index, self) {
+			showMoreBlocksRegular = Array.from(showMoreBlocks).filter((item) => {
 				return !item.dataset.showmoreMedia
 			})
 			// Инициализация обычных объектов
@@ -476,7 +481,7 @@ export function showMore() {
 			if (mdQueriesArray && mdQueriesArray.length) {
 				mdQueriesArray.forEach((mdQueriesItem) => {
 					// Событие
-					mdQueriesItem.matchMedia.addEventListener('change', function () {
+					mdQueriesItem.matchMedia.addEventListener('change', () => {
 						initItems(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
 					})
 				})
@@ -497,10 +502,12 @@ export function showMore() {
 			showMoreBlock = matchMedia ? showMoreBlock.item : showMoreBlock
 			let showMoreContent = showMoreBlock.querySelectorAll('[data-showmore-content]')
 			let showMoreButton = showMoreBlock.querySelectorAll('[data-showmore-button]')
-			showMoreContent = Array.from(showMoreContent).filter(
-				(item) => item.closest('[data-showmore]') === showMoreBlock
-			)[0]
-			showMoreButton = Array.from(showMoreButton).filter((item) => item.closest('[data-showmore]') === showMoreBlock)[0]
+			showMoreContent = Array.from(showMoreContent).filter((item) => {
+				return item.closest('[data-showmore]') === showMoreBlock
+			})[0]
+			showMoreButton = Array.from(showMoreButton).filter((item) => {
+				return item.closest('[data-showmore]') === showMoreBlock
+			})[0]
 			const hiddenHeight = getHeight(showMoreBlock, showMoreContent)
 			if (matchMedia.matches || !matchMedia) {
 				if (hiddenHeight < getOriginalHeight(showMoreContent)) {
@@ -524,7 +531,9 @@ export function showMore() {
 				for (let index = 1; index < showMoreItems.length; index++) {
 					const showMoreItem = showMoreItems[index - 1]
 					hiddenHeight += showMoreItem.offsetHeight
-					if (index == showMoreTypeValue) break
+					if (index === showMoreTypeValue) {
+						break
+					}
 				}
 			} else {
 				const showMoreTypeValue = showMoreContent.dataset.showmoreContent
@@ -536,13 +545,13 @@ export function showMore() {
 		}
 		function getOriginalHeight(showMoreContent) {
 			let parentHidden
-			let hiddenHeight = showMoreContent.offsetHeight
+			const hiddenHeight = showMoreContent.offsetHeight
 			showMoreContent.style.removeProperty('height')
 			if (showMoreContent.closest(`[hidden]`)) {
 				parentHidden = showMoreContent.closest(`[hidden]`)
 				parentHidden.hidden = false
 			}
-			let originalHeight = showMoreContent.offsetHeight
+			const originalHeight = showMoreContent.offsetHeight
 			parentHidden ? (parentHidden.hidden = true) : null
 			showMoreContent.style.height = `${hiddenHeight}px`
 			return originalHeight
@@ -572,34 +581,35 @@ export function showMore() {
 	})
 }
 
-//================================================================================================================================================================================================================================================================================================================
+// ================================================================================================================================================================================================================================================================================================================
 // Прочие полезные функции ================================================================================================================================================================================================================================================================================================================
-//================================================================================================================================================================================================================================================================================================================
+// ================================================================================================================================================================================================================================================================================================================
 // FLS (Full Logging System)
 export function FLS(message) {
 	setTimeout(() => {
 		if (window.FLS) {
+			// eslint-disable-next-line no-console
 			console.log(message)
 		}
 	}, 0)
 }
 // Получить цифры из строки
 export function getDigFromString(item) {
-	return parseInt(item.replace(/[^\d]/g, ''))
+	return Number.parseInt(item.replace(/\D/g, ''))
 }
 // Форматирование цифр типа 100 000 000
 export function getDigFormat(item) {
-	return item.toString().replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ')
+	return item.toString().replace(/(\d)(?=(?:\d\d\d)+(?:\D|$))/g, '$1 ')
 }
 // Убрать класс из всех элементов массива
 export function removeClasses(array, className) {
-	for (var i = 0; i < array.length; i++) {
+	for (let i = 0; i < array.length; i++) {
 		array[i].classList.remove(className)
 	}
 }
 // Уникализация массива
 export function uniqArray(array) {
-	return array.filter(function (item, index, self) {
+	return array.filter((item, index, self) => {
 		return self.indexOf(item) === index
 	})
 }
@@ -615,10 +625,11 @@ export function isHidden(el) {
 // Обработа медиа запросов из атрибутов
 export function dataMediaQueries(array, dataSetValue) {
 	// Получение объектов с медиа запросами
-	const media = Array.from(array).filter(function (item, index, self) {
+	const media = Array.from(array).filter((item) => {
 		if (item.dataset[dataSetValue]) {
 			return item.dataset[dataSetValue].split(',')[0]
 		}
+		return false
 	})
 	// Инициализация объектов с медиа запросами
 	if (media.length) {
@@ -633,8 +644,8 @@ export function dataMediaQueries(array, dataSetValue) {
 			breakpointsArray.push(breakpoint)
 		})
 		// Получаем уникальные брейкпоинты
-		let mdQueries = breakpointsArray.map(function (item) {
-			return '(' + item.type + '-width: ' + item.value + 'px),' + item.value + ',' + item.type
+		let mdQueries = breakpointsArray.map((item) => {
+			return `(${item.type}-width: ${item.value}px),${item.value},${item.type}`
 		})
 		mdQueries = uniqArray(mdQueries)
 		const mdQueriesArray = []
@@ -647,10 +658,11 @@ export function dataMediaQueries(array, dataSetValue) {
 				const mediaType = paramsArray[2]
 				const matchMedia = window.matchMedia(paramsArray[0])
 				// Объекты с нужными условиями
-				const itemsArray = breakpointsArray.filter(function (item) {
+				const itemsArray = breakpointsArray.filter((item) => {
 					if (item.value === mediaBreakpoint && item.type === mediaType) {
 						return true
 					}
+					return false
 				})
 				mdQueriesArray.push({
 					itemsArray,
