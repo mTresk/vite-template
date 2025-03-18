@@ -531,7 +531,7 @@ export function showMore() {
 				for (let index = 1; index < showMoreItems.length; index++) {
 					const showMoreItem = showMoreItems[index - 1]
 					hiddenHeight += showMoreItem.offsetHeight
-					if (index === showMoreTypeValue) {
+					if (index === Number.parseInt(showMoreTypeValue)) {
 						break
 					}
 				}
