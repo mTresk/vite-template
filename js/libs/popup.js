@@ -137,12 +137,12 @@ class Popup {
 		})
 		// Закрытие по ESC
 		document.addEventListener('keydown', (e) => {
-			if (this.options.closeEsc && e.which === 27 && e.code === 'Escape' && this.isOpen) {
+			if (this.options.closeEsc && e.key === 'Escape' && this.isOpen) {
 				e.preventDefault()
 				this.close()
 				return
 			}
-			if (this.options.focusCatch && e.which === 9 && this.isOpen) {
+			if (this.options.focusCatch && e.key === 'Tab' && this.isOpen) {
 				this._focusCatch(e)
 			}
 		})
