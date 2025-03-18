@@ -1,1 +1,1 @@
-// Дополнительные скрипты
+window.onload = function () {}

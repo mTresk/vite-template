@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-const mapRoot = document.querySelector('#map')
+const mapRoot = document.querySelector('[data-map]')
 
 if (mapRoot) {
 	async function initMap() {

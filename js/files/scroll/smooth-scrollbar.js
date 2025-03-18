@@ -1,9 +1,12 @@
 import Scrollbar from 'smooth-scrollbar'
 
-if (document.querySelectorAll('[data-scrollbar]').length) {
-	document.querySelectorAll('[data-scrollbar]').forEach((scrollBlock) => {
+const scrollBlocks = document.querySelectorAll('[data-scrollbar]')
+
+if (scrollBlocks.length) {
+	scrollBlocks.forEach((scrollBlock) => {
 		Scrollbar.init(scrollBlock, {
 			alwaysShowTracks: true,
+			continuousScrolling: false,
 		})
 	})
 }
