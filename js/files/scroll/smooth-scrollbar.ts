@@ -1,6 +1,6 @@
 import Scrollbar from 'smooth-scrollbar'
 
-const scrollBlocks = document.querySelectorAll('[data-scrollbar]')
+const scrollBlocks = document.querySelectorAll<HTMLElement>('[data-scrollbar]')
 
 if (scrollBlocks.length) {
 	scrollBlocks.forEach((scrollBlock) => {

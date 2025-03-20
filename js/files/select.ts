@@ -1,7 +1,7 @@
 import NiceSelect from 'nice-select2'
 
 function initSelects() {
-	const selects = document.querySelectorAll('[data-select]')
+	const selects = document.querySelectorAll<HTMLElement>('[data-select]')
 
 	if (selects) {
 		selects.forEach((select) => {

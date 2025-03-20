@@ -1,14 +1,16 @@
-import { resolve } from 'path'
+import type { Plugin } from 'vite'
+import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
 import handlebars from 'vite-plugin-handlebars'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 
 export default defineConfig({
 	plugins: [
-		ViteImageOptimizer({}),
+		ViteImageOptimizer(),
 		handlebars({
+			reloadOnPartialChange: true,
 			partialDirectory: resolve(__dirname, 'partials'),
-		}),
+		}) as unknown as Plugin,
 	],
 	build: {
 		minify: false,

@@ -71,7 +71,7 @@ body::after {
 		@media (any-hover: hover) {
 			&:hover {
 				svg path {
-					fill: $accentColor;
+					fill: red;
 				}
 			}
 		}

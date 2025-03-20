@@ -25,6 +25,8 @@
 	},
 	"devDependencies": {
 		"@antfu/eslint-config": "^4.10.1",
+		"@types/gulp": "^4.0.17",
+		"@types/inputmask": "^5.0.7",
 		"autoprefixer": "^10.4.21",
 		"eslint": "^9.22.0",
 		"gulp": "^4.0.2",
