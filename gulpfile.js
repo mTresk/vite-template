@@ -1,27 +1,27 @@
 import gulp from 'gulp'
-import { fonstStyle, otfToTtf, ttfToWoff } from './js/tasks/fonts.js'
+import { fontsStyle, otfToTtf, ttfToWoff } from './js/tasks/fonts.js'
 
 const buildFolder = `./public`
 const srcFolder = `./src`
 const appFolder = `.`
 
 const path = {
-	build: {
-		fonts: `${buildFolder}/fonts/`,
-	},
-	src: {
-		fonts: `${srcFolder}/fonts/*.*`,
-	},
-	buildFolder,
-	srcFolder,
-	appFolder,
+    build: {
+        fonts: `${buildFolder}/fonts/`,
+    },
+    src: {
+        fonts: `${srcFolder}/fonts/*.*`,
+    },
+    buildFolder,
+    srcFolder,
+    appFolder,
 }
 
 const app = {
-	gulp,
-	path,
+    gulp,
+    path,
 }
 
-const fonts = gulp.series(otfToTtf, ttfToWoff, fonstStyle)
+const fonts = gulp.series(otfToTtf, ttfToWoff, fontsStyle)
 
 export { app, fonts }
