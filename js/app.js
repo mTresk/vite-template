@@ -1,7 +1,7 @@
 /* eslint-disable perfectionist/sort-imports */
 /* eslint-disable unused-imports/no-unused-imports */
 /* eslint-disable no-unused-vars */
-import * as flsFunctions from './files/functions.js'
+import * as flsFunctions from './files/functions.ts'
 import * as flsForms from './files/forms/forms.js'
 import * as flsScroll from './files/scroll/scroll.js'
 // import './libs/parallax-mouse.js'
