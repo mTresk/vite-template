@@ -16,7 +16,7 @@ class ScrollWatcher {
 
 	constructor(props: Partial<IWatcherConfig>) {
 		const defaultConfig = {
-			logging: true,
+			logging: false,
 		}
 		this.config = Object.assign(defaultConfig, props)
 		this.observer = null

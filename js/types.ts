@@ -88,6 +88,6 @@ export interface IParallaxMouseElement extends HTMLElement {
 // Расширяем глобальный интерфейс Window
 declare global {
 	interface Window {
-		FLS: any
+		FLS: boolean | undefined
 	}
 }

@@ -164,7 +164,7 @@ export function _slideToggle(target: HTMLElement, duration: number = 500): void 
 export let bodyLockStatus = true
 
 export function bodyUnlock(delay: number = 500) {
-	const body = document.querySelector<HTMLBodyElement>('body')
+	const body = document.querySelector<HTMLBodyElement>('body')!
 	if (bodyLockStatus) {
 		const lockPadding = document.querySelectorAll<HTMLElement>('[data-lp]')
 		setTimeout(() => {
@@ -172,7 +172,7 @@ export function bodyUnlock(delay: number = 500) {
 				const el = lockPadding[index]
 				el.style.paddingRight = '0'
 			}
-			body!.style.paddingRight = '0'
+			body.style.paddingRight = '0'
 			document.documentElement.classList.remove('lock')
 		}, delay)
 		bodyLockStatus = false

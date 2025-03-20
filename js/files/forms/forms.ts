@@ -267,7 +267,7 @@ export function formSubmit() {
 		// Сообщаем в консоль
 		formLogging(`Форма отправлена!`)
 	}
-	function formLogging(message) {
+	function formLogging(message: string): void {
 		FLS(`[Формы]: ${message}`)
 	}
 }

@@ -8,7 +8,7 @@ class MousePRLX {
 	constructor(props: Partial<IMousePRLXConfig>) {
 		const defaultConfig: IMousePRLXConfig = {
 			init: true,
-			logging: true,
+			logging: false,
 		}
 		this.config = Object.assign(defaultConfig, props)
 		if (this.config.init) {
@@ -84,15 +84,6 @@ class MousePRLX {
 	// Логгирование в консоль
 	private setLogging(message: string): void {
 		this.config.logging ? FLS(`[PRLX Mouse]: ${message}`) : null
-	}
-}
-
-// Запускаем и добавляем в объект модулей
-declare global {
-	interface Window {
-		flsModules: {
-			mousePrlx?: MousePRLX
-		}
 	}
 }
 
