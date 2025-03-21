@@ -1,48 +1,48 @@
 {
-	"name": "starter-kit",
-	"type": "module",
-	"version": "0.0.0",
-	"private": true,
-	"browserslist": [
-		"last 2 versions"
-	],
-	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"preview": "vite preview",
-		"fonts": "gulp fonts",
-		"lint": "stylelint scss/**/*.scss"
-	},
-	"dependencies": {
-		"inputmask": "^5.0.9",
-		"js-datepicker": "^5.18.4",
-		"lightgallery": "^2.8.3",
-		"nice-select2": "^2.3.1",
-		"nouislider": "^15.8.1",
-		"smooth-scrollbar": "^8.8.4",
-		"swiper": "^11.2.5",
-		"tippy.js": "^6.3.7"
-	},
-	"devDependencies": {
-		"@antfu/eslint-config": "^4.10.1",
-		"@types/gulp": "^4.0.17",
-		"@types/inputmask": "^5.0.7",
-		"autoprefixer": "^10.4.21",
-		"eslint": "^9.22.0",
-		"gulp": "^4.0.2",
-		"gulp-fonter-fix": "^0.0.1",
-		"gulp-ttf2woff2": "^5.0.0",
-		"prettier": "^3.5.3",
-		"sass": "^1.85.1",
-		"sharp": "^0.33.5",
-		"stylelint": "^16.16.0",
-		"stylelint-config-recess-order": "^6.0.0",
-		"stylelint-config-standard-scss": "^14.0.0",
-		"stylelint-prettier": "^5.0.3",
-		"svgo": "^3.3.2",
-		"typescript": "^5.8.2",
-		"vite": "^6.2.2",
-		"vite-plugin-handlebars": "^2.0.0",
-		"vite-plugin-image-optimizer": "^1.1.8"
-	}
+    "name": "starter-kit",
+    "type": "module",
+    "version": "0.0.0",
+    "private": true,
+    "browserslist": [
+        "last 2 versions"
+    ],
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview",
+        "fonts": "gulp fonts",
+        "lint": "stylelint scss/**/*.scss"
+    },
+    "dependencies": {
+        "inputmask": "^5.0.9",
+        "js-datepicker": "^5.18.4",
+        "lightgallery": "^2.8.3",
+        "nice-select2": "^2.3.1",
+        "nouislider": "^15.8.1",
+        "smooth-scrollbar": "^8.8.4",
+        "swiper": "^11.2.5",
+        "tippy.js": "^6.3.7"
+    },
+    "devDependencies": {
+        "@antfu/eslint-config": "^4.10.1",
+        "@types/gulp": "^4.0.17",
+        "@types/inputmask": "^5.0.7",
+        "autoprefixer": "^10.4.21",
+        "eslint": "^9.22.0",
+        "gulp": "^4.0.2",
+        "gulp-fonter-fix": "^0.0.1",
+        "gulp-ttf2woff2": "^5.0.0",
+        "prettier": "^3.5.3",
+        "sass": "^1.85.1",
+        "sharp": "^0.33.5",
+        "stylelint": "^16.16.0",
+        "stylelint-config-recess-order": "^6.0.0",
+        "stylelint-config-standard-scss": "^14.0.0",
+        "stylelint-prettier": "^5.0.3",
+        "svgo": "^3.3.2",
+        "typescript": "^5.8.2",
+        "vite": "^6.2.2",
+        "vite-plugin-handlebars": "^2.0.0",
+        "vite-plugin-image-optimizer": "^1.1.8"
+    }
 }

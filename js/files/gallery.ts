@@ -12,17 +12,17 @@ import 'lightgallery/css/lightgallery.css'
 const galleries = document.querySelectorAll<HTMLElement>('[data-gallery]')
 
 if (galleries.length) {
-	const galleyItems: IGalleryItem[] = []
-	galleries.forEach((gallery) => {
-		galleyItems.push({
-			gallery,
-			galleryClass: lightGallery(gallery, {
-				// plugins: [lgZoom, lgThumbnail],
-				licenseKey: '7EC452A9-0CFD441C-BD984C7C-17C8456E',
-				speed: 500,
-			}),
-		})
-	})
-	// Добавляем в объект модулей
-	flsModules.gallery = galleyItems
+    const galleyItems: IGalleryItem[] = []
+    galleries.forEach((gallery) => {
+        galleyItems.push({
+            gallery,
+            galleryClass: lightGallery(gallery, {
+                // plugins: [lgZoom, lgThumbnail],
+                licenseKey: '7EC452A9-0CFD441C-BD984C7C-17C8456E',
+                speed: 500,
+            }),
+        })
+    })
+    // Добавляем в объект модулей
+    flsModules.gallery = galleyItems
 }
