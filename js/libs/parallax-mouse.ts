@@ -1,6 +1,6 @@
-import { FLS } from '../files/functions.js'
-import { flsModules } from '../files/modules.js'
-import type { IMousePRLXConfig, IParallaxMouseElement } from '../types.js'
+import { FLS } from '../files/functions'
+import { flsModules } from '../files/modules'
+import type { IMousePRLXConfig, IParallaxMouseElement } from '../types'
 
 class MousePRLX {
     private config: IMousePRLXConfig
@@ -12,27 +12,27 @@ class MousePRLX {
         }
         this.config = Object.assign(defaultConfig, props)
         if (this.config.init) {
-            const paralaxMouse: NodeListOf<IParallaxMouseElement> = document.querySelectorAll('[data-prlx-mouse]')
-            if (paralaxMouse.length) {
-                this.paralaxMouseInit(paralaxMouse)
-                this.setLogging(`Проснулся, слежу за объектами: (${paralaxMouse.length})`)
+            const parallaxMouse: NodeListOf<IParallaxMouseElement> = document.querySelectorAll('[data-prlx-mouse]')
+            if (parallaxMouse.length) {
+                this.parallaxMouseInit(parallaxMouse)
+                this.setLogging(`Проснулся, слежу за объектами: (${parallaxMouse.length})`)
             } else {
                 this.setLogging('Нет ни одного объекта. Сплю...zzZZZzZZz...')
             }
         }
     }
 
-    private paralaxMouseInit(paralaxMouse: NodeListOf<IParallaxMouseElement>): void {
-        paralaxMouse.forEach((el: IParallaxMouseElement) => {
-            const paralaxMouseWrapper: Element | null = el.closest('[data-prlx-mouse-wrapper]')
+    private parallaxMouseInit(parallaxMouse: NodeListOf<IParallaxMouseElement>): void {
+        parallaxMouse.forEach((el: IParallaxMouseElement) => {
+            const parallaxMouseWrapper: Element | null = el.closest('[data-prlx-mouse-wrapper]')
 
-            // Коэф. X
-            const paramСoefficientX: number = el.dataset.prlxCx ? +el.dataset.prlxCx : 100
-            // Коэф. У
-            const paramСoefficientY: number = el.dataset.prlxCy ? +el.dataset.prlxCy : 100
-            // Напр. Х
+            // Коэффициент X
+            const paramCoefficientX: number = el.dataset.prlxCx ? +el.dataset.prlxCx : 100
+            // Коэффициент. У
+            const paramCoefficientY: number = el.dataset.prlxCy ? +el.dataset.prlxCy : 100
+            // Направление Х
             const directionX: number = el.hasAttribute('data-prlx-dxr') ? -1 : 1
-            // Напр. У
+            // Направление У
             const directionY: number = el.hasAttribute('data-prlx-dyr') ? -1 : 1
             // Скорость анимации
             const paramAnimation: number = el.dataset.prlxA ? +el.dataset.prlxA : 50
@@ -40,28 +40,28 @@ class MousePRLX {
             // Объявление переменных
             let positionX: number = 0
             let positionY: number = 0
-            let coordXprocent: number = 0
-            let coordYprocent: number = 0
+            let coordinatesXPercent: number = 0
+            let coordinatesYPercent: number = 0
 
             setMouseParallaxStyle()
 
             // Проверяем наличие родителя, в котором будет считываться положение мыши
-            if (paralaxMouseWrapper) {
-                mouseMoveParalax(paralaxMouseWrapper)
+            if (parallaxMouseWrapper) {
+                mouseMoveParallax(parallaxMouseWrapper)
             } else {
-                mouseMoveParalax()
+                mouseMoveParallax()
             }
 
             function setMouseParallaxStyle(): void {
-                const distX: number = coordXprocent - positionX
-                const distY: number = coordYprocent - positionY
+                const distX: number = coordinatesXPercent - positionX
+                const distY: number = coordinatesYPercent - positionY
                 positionX = positionX + (distX * paramAnimation) / 1000
                 positionY = positionY + (distY * paramAnimation) / 1000
-                el.style.cssText = `transform: translate3D(${(directionX * positionX) / (paramСoefficientX / 10)}%,${(directionY * positionY) / (paramСoefficientY / 10)}%,0);`
+                el.style.cssText = `transform: translate3D(${(directionX * positionX) / (paramCoefficientX / 10)}%,${(directionY * positionY) / (paramCoefficientY / 10)}%,0);`
                 requestAnimationFrame(setMouseParallaxStyle)
             }
 
-            function mouseMoveParalax(wrapper: Element | Window = window): void {
+            function mouseMoveParallax(wrapper: Element | Window = window): void {
                 wrapper.addEventListener('mousemove', (e: Event) => {
                     const mouseEvent = e as MouseEvent
                     const offsetTop: number = el.getBoundingClientRect().top + window.scrollY
@@ -70,20 +70,20 @@ class MousePRLX {
                         const parallaxWidth: number = window.innerWidth
                         const parallaxHeight: number = window.innerHeight
                         // Ноль посередине
-                        const coordX: number = mouseEvent.clientX - parallaxWidth / 2
-                        const coordY: number = mouseEvent.clientY - parallaxHeight / 2
+                        const coordinatesX: number = mouseEvent.clientX - parallaxWidth / 2
+                        const coordinatesY: number = mouseEvent.clientY - parallaxHeight / 2
                         // Получаем проценты
-                        coordXprocent = (coordX / parallaxWidth) * 100
-                        coordYprocent = (coordY / parallaxHeight) * 100
+                        coordinatesXPercent = (coordinatesX / parallaxWidth) * 100
+                        coordinatesYPercent = (coordinatesY / parallaxHeight) * 100
                     }
                 })
             }
         })
     }
 
-    // Логгирование в консоль
+    // Логирование в консоль
     private setLogging(message: string): void {
-        this.config.logging ? FLS(`[PRLX Mouse]: ${message}`) : null
+        this.config.logging ? FLS(`[Parallax Mouse]: ${message}`) : null
     }
 }
 

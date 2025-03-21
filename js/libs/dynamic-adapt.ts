@@ -10,8 +10,8 @@ interface DynamicAdaptObject {
 type AdaptType = 'min' | 'max'
 
 class DynamicAdapt {
-    private type: AdaptType
-    private оbjects: DynamicAdaptObject[]
+    private readonly type: AdaptType
+    private objects: DynamicAdaptObject[]
     private daClassname: string
     private nodes: HTMLElement[]
     private mediaQueries: string[]
@@ -22,16 +22,16 @@ class DynamicAdapt {
 
     init(): void {
         // массив объектов
-        this.оbjects = []
+        this.objects = []
         this.daClassname = '_dynamic_adapt_'
         // массив DOM-элементов
-        this.nodes = [...document.querySelectorAll('[data-da]')] as HTMLElement[]
+        this.nodes = Array.from(document.querySelectorAll('[data-da]')) as HTMLElement[]
 
-        // наполнение оbjects объктами
+        // наполнение objects объeктами
         this.nodes.forEach((node) => {
             const data = node.dataset.da?.trim() || ''
             const dataArray = data.split(',')
-            const оbject: DynamicAdaptObject = {
+            const object: DynamicAdaptObject = {
                 element: node,
                 parent: node.parentNode as HTMLElement,
                 destination: document.querySelector(dataArray[0].trim()) as HTMLElement,
@@ -39,13 +39,13 @@ class DynamicAdapt {
                 place: dataArray[2] ? dataArray[2].trim() : 'last',
                 index: this.indexInParent(node.parentNode as HTMLElement, node),
             }
-            this.оbjects.push(оbject)
+            this.objects.push(object)
         })
 
-        this.arraySort(this.оbjects)
+        this.arraySort(this.objects)
 
         // массив уникальных медиа-запросов
-        this.mediaQueries = this.оbjects
+        this.mediaQueries = this.objects
             .map(({ breakpoint }) => `(${this.type}-width: ${breakpoint}px),${breakpoint}`)
             .filter((item, index, self) => self.indexOf(item) === index)
 
@@ -57,22 +57,22 @@ class DynamicAdapt {
             const mediaBreakpoint = mediaSplit[1]
 
             // массив объектов с подходящим брейкпоинтом
-            const оbjectsFilter = this.оbjects.filter(({ breakpoint }) => breakpoint === mediaBreakpoint)
+            const objectsFilter = this.objects.filter(({ breakpoint }) => breakpoint === mediaBreakpoint)
             matchMedia.addEventListener('change', () => {
-                this.mediaHandler(matchMedia, оbjectsFilter)
+                this.mediaHandler(matchMedia, objectsFilter)
             })
-            this.mediaHandler(matchMedia, оbjectsFilter)
+            this.mediaHandler(matchMedia, objectsFilter)
         })
     }
 
     // Основна функция
-    private mediaHandler(matchMedia: MediaQueryList, оbjects: DynamicAdaptObject[]): void {
+    private mediaHandler(matchMedia: MediaQueryList, objects: DynamicAdaptObject[]): void {
         if (matchMedia.matches) {
-            оbjects.forEach((оbject) => {
-                this.moveTo(оbject.place, оbject.element, оbject.destination)
+            objects.forEach((object) => {
+                this.moveTo(object.place, object.element, object.destination)
             })
         } else {
-            оbjects.forEach(({ parent, element, index }) => {
+            objects.forEach(({ parent, element, index }) => {
                 if (element.classList.contains(this.daClassname)) {
                     this.moveBack(parent, element, index)
                 }
@@ -106,7 +106,7 @@ class DynamicAdapt {
 
     // Функция получения индекса внутри родителя
     private indexInParent(parent: HTMLElement, element: HTMLElement): number {
-        return [...parent.children].indexOf(element)
+        return Array.from(parent.children).indexOf(element)
     }
 
     // Функция сортировки массива по breakpoint и place

@@ -1,6 +1,6 @@
-import type { IGalleryItem } from '../types.ts'
+import type { IGalleryItem } from '../types'
 import lightGallery from 'lightgallery'
-import { flsModules } from './modules.js'
+import { flsModules } from './modules'
 import 'lightgallery/css/lightgallery.css'
 
 // Плагины

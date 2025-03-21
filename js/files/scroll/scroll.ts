@@ -1,4 +1,4 @@
-import type { IStickyConfig, IStickyItemValues } from '../../types.ts'
+import type { IStickyConfig, IStickyItemValues } from '../../types'
 import { getHash, menuClose } from '../functions.ts'
 import { flsModules } from '../modules.ts'
 import { gotoBlock } from './gotoblock.ts'
@@ -14,6 +14,7 @@ export function pageNavigation() {
     document.addEventListener('click', pageNavigationAction)
     // Если подключен scrollWatcher, подсвечиваем текущий пукт меню
     document.addEventListener('watcherCallback', pageNavigationAction)
+
     // Основная функция
     function pageNavigationAction(e: Event) {
         if (e.type === 'click') {
@@ -74,6 +75,7 @@ export function pageNavigation() {
             }
         }
     }
+
     // Прокрутка по хешу
     if (getHash()) {
         let goToHash: string | null = null
@@ -87,6 +89,7 @@ export function pageNavigation() {
         }
     }
 }
+
 // Работа с шапкой при скроле
 export function headerScroll() {
     addWindowScrollEvent = true
@@ -191,6 +194,7 @@ export function digitsCounter() {
 
     document.addEventListener('watcherCallback', digitsCounterAction as EventListener)
 }
+
 // Прилипающий блок
 export function stickyBlock() {
     addWindowScrollEvent = true
@@ -216,6 +220,7 @@ export function stickyBlock() {
             })
         }
     }
+
     function stickyBlockItem(stickyParent: HTMLElement, stickyConfig: IStickyConfig) {
         const stickyBlockItem = stickyParent.querySelector('[data-sticky-item]') as HTMLElement
         const headerHeight = stickyConfig.header
@@ -265,6 +270,7 @@ export function stickyBlock() {
 
     stickyBlockInit()
 }
+
 // При подключении модуля обработчик события запустится автоматически
 setTimeout(() => {
     if (addWindowScrollEvent) {
@@ -274,6 +280,7 @@ setTimeout(() => {
         })
     }
 }, 0)
+
 // Направление скрола
 export function scrollDirection() {
     const body = document.body

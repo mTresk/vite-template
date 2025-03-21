@@ -1,8 +1,9 @@
-import type { ISmoothScrollOptions } from '../../types.ts'
+import type { ISmoothScrollOptions } from '../../types'
 import { FLS, menuClose } from '../functions.ts'
 
 declare class SmoothScroll {
     constructor()
+
     animateScroll: (target: HTMLElement, hash: string, options: ISmoothScrollOptions) => void
 }
 

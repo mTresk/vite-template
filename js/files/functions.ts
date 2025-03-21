@@ -61,18 +61,18 @@ export function fullVHfix(): void {
     const fullScreens = document.querySelectorAll<HTMLElement>('[data-fullscreen]')
 
     if (fullScreens.length && isMobile.any()) {
-        window.addEventListener('resize', fixHeight)
-
-        function fixHeight(): void {
+        const fixHeight = (): void => {
             const vh = window.innerHeight * 0.01
             document.documentElement.style.setProperty('--vh', `${vh}px`)
         }
 
         fixHeight()
+
+        window.addEventListener('resize', fixHeight)
     }
 }
 
-// Вспомогательные модули плавного расскрытия и закрытия объекта ======================================================================================================================================================================
+// Вспомогательные модули плавного раскрытия и закрытия объекта ======================================================================================================================================================================
 export function _slideUp(target: HTMLElement, duration: number = 500, showmore: number = 0): void {
     if (!target.classList.contains('_slide')) {
         target.classList.add('_slide')
@@ -213,30 +213,13 @@ export function spoilers(): void {
     const spoilersArray = document.querySelectorAll<HTMLElement>('[data-spoilers]')
 
     if (spoilersArray.length > 0) {
-        // Получение обычных слойлеров
+        // Получение обычных спойлеров
         const spoilersRegular = Array.from(spoilersArray).filter((item) => {
             return !item.dataset.spoilers?.split(',')[0]
         })
 
-        // Инициализация обычных слойлеров
-        if (spoilersRegular.length) {
-            initSpoilers(spoilersRegular, false)
-        }
-
-        // Получение слойлеров с медиа запросами
-        const mdQueriesArray = dataMediaQueries(spoilersArray, 'spoilers')
-
-        if (mdQueriesArray && mdQueriesArray.length) {
-            mdQueriesArray.forEach((mdQueriesItem) => {
-                mdQueriesItem.matchMedia.addEventListener('change', () => {
-                    initSpoilers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
-                })
-                initSpoilers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
-            })
-        }
-
         // Инициализация
-        function initSpoilers(spoilersArray: HTMLElement[], matchMedia: MediaQueryList | false = false): void {
+        const initSpoilers = (spoilersArray: HTMLElement[], matchMedia: MediaQueryList | false = false): void => {
             spoilersArray.forEach((spoilersBlock) => {
                 if (matchMedia && 'item' in spoilersBlock) {
                     spoilersBlock = (spoilersBlock as unknown as IBreakpoint).item
@@ -254,8 +237,25 @@ export function spoilers(): void {
             })
         }
 
+        // Инициализация обычных спойлеров
+        if (spoilersRegular.length) {
+            initSpoilers(spoilersRegular, false)
+        }
+
+        // Получение спойлеров с медиа запросами
+        const mdQueriesArray = dataMediaQueries(spoilersArray, 'spoilers')
+
+        if (mdQueriesArray && mdQueriesArray.length) {
+            mdQueriesArray.forEach((mdQueriesItem) => {
+                mdQueriesItem.matchMedia.addEventListener('change', () => {
+                    initSpoilers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
+                })
+                initSpoilers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
+            })
+        }
+
         // Работа с контентом
-        function initSpoilerBody(spoilersBlock: HTMLElement, hideSpoilerBody = true): void {
+        const initSpoilerBody = (spoilersBlock: HTMLElement, hideSpoilerBody = true): void => {
             const spoilerTitlesNodeList = spoilersBlock.querySelectorAll<HTMLElement>('[data-spoiler]')
             const spoilerTitles = Array.from(spoilerTitlesNodeList).filter((item) => {
                 return item.closest('[data-spoilers]') === spoilersBlock
@@ -282,7 +282,7 @@ export function spoilers(): void {
             }
         }
 
-        function setSpoilerAction(e: Event): void {
+        const setSpoilerAction = (e: Event): void => {
             e.preventDefault()
             const el = e.target as HTMLElement
             const spoilerTitle = el.closest('[data-spoiler]') as HTMLElement | null
@@ -307,7 +307,7 @@ export function spoilers(): void {
             }
         }
 
-        function hideSpoilersBody(spoilersBlock: HTMLElement): void {
+        const hideSpoilersBody = (spoilersBlock: HTMLElement): void => {
             const spoilerActiveTitle = spoilersBlock.querySelector<HTMLElement>('[data-spoiler]._spoiler-active')
             const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
                 ? Number.parseInt(spoilersBlock.dataset.spoilersSpeed)
@@ -350,7 +350,7 @@ export function spoilers(): void {
     }
 }
 
-// Модуь работы с табами =======================================================================================================================================================================================================================
+// Модуль работы с табами =======================================================================================================================================================================================================================
 export function tabs(): void {
     const tabs = document.querySelectorAll<HTMLElement>('[data-tabs]')
     let tabsActiveHash: string[] = []
@@ -373,7 +373,7 @@ export function tabs(): void {
             initTabs(tabsBlock)
         })
 
-        // Получение слойлеров с медиа запросами
+        // Получение спойлеров с медиа запросами
         const mdQueriesArray = dataMediaQueries(tabs, 'tabs')
         if (mdQueriesArray && mdQueriesArray.length) {
             mdQueriesArray.forEach((mdQueriesItem) => {
@@ -520,7 +520,7 @@ export function tabs(): void {
     }
 }
 
-// Обработа медиа запросов из атрибутов
+// Обработка медиа запросов из атрибутов
 export function dataMediaQueries(array: NodeListOf<HTMLElement>, dataSetValue: string): IMediaQueryResult[] {
     // Получение объектов с медиа запросами
     const media = Array.from(array).filter((item) => {
@@ -755,31 +755,37 @@ export function FLS(message: string): void {
         }
     }, 0)
 }
+
 // Получить цифры из строки
 export function getDigFromString(item: string): number {
     return Number.parseInt(item.replace(/\D/g, ''))
 }
+
 // Форматирование цифр типа 100 000 000
 export function getDigFormat(item: number | string): string {
     return item.toString().replace(/(\d)(?=(?:\d\d\d)+(?:\D|$))/g, '$1 ')
 }
+
 // Убрать класс из всех элементов массива
 export function removeClasses(array: HTMLElement[], className: string): void {
     for (let i = 0; i < array.length; i++) {
         array[i].classList.remove(className)
     }
 }
+
 // Уникализация массива
 export function uniqArray<T>(array: T[]): T[] {
     return array.filter((item, index, self) => {
         return self.indexOf(item) === index
     })
 }
+
 // Функция получения индекса внутри родителя
 export function indexInParent(parent: Element, element: Element): number {
     const array = Array.prototype.slice.call(parent.children)
     return Array.prototype.indexOf.call(array, element)
 }
+
 // Функция проверяет, скрыт ли объект
 export function isHidden(el: HTMLElement): boolean {
     return el.offsetParent === null

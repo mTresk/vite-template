@@ -1,5 +1,5 @@
-import { bodyLock, bodyLockStatus, bodyUnlock, FLS } from '../files/functions.ts'
-import { flsModules } from '../files/modules.ts'
+import { bodyLock, bodyLockStatus, bodyUnlock, FLS } from '../files/functions'
+import { flsModules } from '../files/modules'
 
 // Интерфейс для настроек попапа
 interface PopupOptions {
@@ -77,7 +77,7 @@ class Popup {
             },
             focusCatch: true, // Фокус внутри попапа зациклен
             closeEsc: true, // Закрытие по ESC
-            bodyLock: true, // Блокировка скролла
+            bodyLock: true, // Блокировка скрола
             hashSettings: {
                 location: true, // Хэш в адресной строке
                 goHash: true, // Переход по наличию в адресной строке
@@ -389,5 +389,6 @@ class Popup {
         }
     }
 }
+
 // Запускаем и добавляем в объект модулей
 flsModules.popup = new Popup({})

@@ -1,10 +1,10 @@
-import { FLS, uniqArray } from '../files/functions.ts'
-import { flsModules } from '../files/modules.ts'
-import { IWatcherConfig, IWatcherElement, IWatcherParams } from '../types.ts'
+import { FLS, uniqArray } from '../files/functions'
+import { flsModules } from '../files/modules'
+import { IWatcherConfig, IWatcherElement, IWatcherParams } from '../types'
 
-// Наблюдатель объектов [всевидещее око]
+// Наблюдатель объектов [всевидящее око]
 // data-watch - можно писать значение для применения кастомного кода
-// data-watch-root - родитель внутри которого налюдать за объектом
+// data-watch-root - родитель внутри которого наблюдать за объектом
 // data-watch-margin - отступ
 // data-watch-threshold - процент показа объекта для срабатывания
 // data-watch-once - наблюдать только один раз
@@ -135,16 +135,16 @@ class ScrollWatcher {
         }
     }
 
-    // Функция обработки базовых действий точек срабатываения
+    // Функция обработки базовых действий точек срабатывания
     scrollWatcherIntersecting(entry: IntersectionObserverEntry, targetElement: IWatcherElement): void {
         if (entry.isIntersecting) {
             // Видим объект
-            // Добавляем класс
+            // добавляем класс
             !targetElement.classList.contains('_watcher-view') ? targetElement.classList.add('_watcher-view') : null
             this.scrollWatcherLogging(`Я вижу ${targetElement.classList}, добавил класс _watcher-view`)
         } else {
             // Не видим объект
-            // Убираем класс
+            // убираем класс
             targetElement.classList.contains('_watcher-view') ? targetElement.classList.remove('_watcher-view') : null
             this.scrollWatcherLogging(`Я не вижу ${targetElement.classList}, убрал класс _watcher-view`)
         }
@@ -163,13 +163,13 @@ class ScrollWatcher {
     // Функция обработки наблюдения
     scrollWatcherCallback(entry: IntersectionObserverEntry, observer: IntersectionObserver): void {
         const targetElement = entry.target as IWatcherElement
-        // Обработка базовых действий точек срабатываения
+        // Обработка базовых действий точек срабатывания
         this.scrollWatcherIntersecting(entry, targetElement)
         // Если есть атрибут data-watch-once убираем слежку
         targetElement.hasAttribute('data-watch-once') && entry.isIntersecting
             ? this.scrollWatcherOff(targetElement, observer)
             : null
-        // Создаем свое событие отбратной связи
+        // Создаем свое событие обратной связи
         document.dispatchEvent(
             new CustomEvent('watcherCallback', {
                 detail: {
@@ -179,5 +179,6 @@ class ScrollWatcher {
         )
     }
 }
+
 // Запускаем и добавляем в объект модулей
 flsModules.watcher = new ScrollWatcher({})

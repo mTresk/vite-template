@@ -1,5 +1,5 @@
 import gulp from 'gulp'
-import { fonstStyle, otfToTtf, ttfToWoff } from './js/tasks/fonts.js'
+import { fontsStyle, otfToTtf, ttfToWoff } from './js/tasks/fonts.js'
 
 const buildFolder = `./public`
 const srcFolder = `./src`
@@ -22,6 +22,6 @@ const app = {
     path,
 }
 
-const fonts = gulp.series(otfToTtf, ttfToWoff, fonstStyle)
+const fonts = gulp.series(otfToTtf, ttfToWoff, fontsStyle)
 
 export { app, fonts }
