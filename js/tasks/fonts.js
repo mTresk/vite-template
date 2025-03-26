@@ -1,8 +1,8 @@
 import fs from 'node:fs'
 import { basename as _basename, extname } from 'node:path'
-import fonter from '../types/gulp-fonter-fix'
 import ttf2woff2 from 'gulp-ttf2woff2'
 import { app } from '../../gulpfile.js'
+import fonter from 'gulp-fonter-fix'
 
 export function otfToTtf() {
     return app.gulp
