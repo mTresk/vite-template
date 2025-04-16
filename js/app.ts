@@ -26,10 +26,10 @@ import '../scss/style.scss'
 // flsFunctions.spoilers()
 // flsFunctions.tabs()
 // flsFunctions.showMore()
-//
+
 // flsForms.formQuantity()
 // flsForms.formRating()
-//
+
 // flsScroll.pageNavigation()
 // flsScroll.headerScroll()
 // flsScroll.scrollDirection()

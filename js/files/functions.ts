@@ -672,12 +672,13 @@ export function showMore(): void {
                     ? showMoreContent.dataset.showmoreContent
                     : 3
                 const showMoreItems = showMoreContent.children
-                for (let index = 1; index < showMoreItems.length; index++) {
-                    const showMoreItem = showMoreItems[index - 1]
+                for (
+                    let index = 0;
+                    index < Number.parseInt(showMoreTypeValue as string) && index < showMoreItems.length;
+                    index++
+                ) {
+                    const showMoreItem = showMoreItems[index]
                     hiddenHeight += (showMoreItem as HTMLElement).offsetHeight
-                    if (index === Number.parseInt(showMoreTypeValue as string)) {
-                        break
-                    }
                 }
             } else {
                 const showMoreTypeValue = showMoreContent.dataset.showmoreContent
