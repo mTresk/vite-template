@@ -6,7 +6,9 @@ import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 
 export default defineConfig({
     plugins: [
-        ViteImageOptimizer(),
+        ViteImageOptimizer({
+            test: /\.(jpe?g|png|gif|tiff|webp|avif)$/i,
+        }),
         handlebars({
             reloadOnPartialChange: true,
             partialDirectory: resolve(__dirname, 'partials'),
