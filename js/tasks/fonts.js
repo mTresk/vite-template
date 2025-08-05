@@ -1,45 +1,153 @@
 import fs from 'node:fs'
 import { basename as _basename, extname } from 'node:path'
-import ttf2woff2 from 'gulp-ttf2woff2'
-import { app } from '../../gulpfile.js'
-import fonter from 'gulp-fonter-fix'
+import Fontmin from 'fontmin'
 
-export function otfToTtf() {
-    return app.gulp
-        .src(`${app.path.srcFolder}/fonts/*.otf`, {})
-        .pipe(
-            fonter({
-                formats: ['ttf'],
-            })
-        )
-        .pipe(app.gulp.dest(`${app.path.srcFolder}/fonts/`))
+const buildFolder = `./public`
+const srcFolder = `./src`
+const appFolder = `.`
+
+const path = {
+    build: {
+        fonts: `${buildFolder}/fonts/`,
+    },
+    src: {
+        fonts: `${srcFolder}/fonts/*.*`,
+    },
+    buildFolder,
+    srcFolder,
+    appFolder,
 }
 
-export function ttfToWoff() {
-    return app.gulp
-        .src(`${app.path.srcFolder}/fonts/*.ttf`, {})
-        .pipe(
-            fonter({
-                formats: ['woff'],
-            })
-        )
-        .pipe(app.gulp.dest(`${app.path.build.fonts}`))
-        .pipe(app.gulp.src(`${app.path.srcFolder}/fonts/*.ttf`))
-        .pipe(ttf2woff2())
-        .pipe(app.gulp.dest(`${app.path.build.fonts}`))
-        .pipe(app.gulp.src(`${app.path.srcFolder}/fonts/*.{woff,woff2}`))
-        .pipe(app.gulp.dest(`${app.path.build.fonts}`))
+// Создаем папку, если её нет
+async function ensureDirectoryExists(dir) {
+    try {
+        await fs.promises.access(dir)
+    } catch {
+        await fs.promises.mkdir(dir, { recursive: true })
+    }
 }
 
-export function fontsStyle() {
-    const fontsFile = `${app.path.appFolder}/scss/fonts/fonts.scss`
+// Конвертируем OTF в TTF
+async function convertOtfToTtf() {
+    console.log('Converting OTF to TTF...')
+    const otfFiles = await fs.promises
+        .readdir(`${srcFolder}/fonts`)
+        .then((files) => files.filter((file) => file.endsWith('.otf')))
+        .catch(() => [])
 
-    fs.readdir(app.path.build.fonts, (_err, fonts) => {
+    if (otfFiles.length === 0) {
+        console.log('No OTF files found')
+        return
+    }
+
+    for (const file of otfFiles) {
+        console.log(`Converting ${file}...`)
+        const inputPath = `${srcFolder}/fonts/${file}`
+        const outputPath = `${srcFolder}/fonts/${file.replace('.otf', '.ttf')}`
+
+        try {
+            const fontmin = new Fontmin().src(inputPath).dest(`${srcFolder}/fonts/`).use(Fontmin.ttf2ttf())
+
+            await new Promise((resolve, reject) => {
+                fontmin.run((err, files) => {
+                    if (err) {
+                        console.error(`Error converting ${file}:`, err)
+                        reject(err)
+                    } else {
+                        console.log(`Converted ${file} to TTF`)
+                        resolve()
+                    }
+                })
+            })
+        } catch (error) {
+            console.error(`Error processing ${file}:`, error)
+        }
+    }
+}
+
+// Конвертируем TTF в WOFF/WOFF2
+async function convertTtfToWoff() {
+    console.log('Converting TTF to WOFF/WOFF2...')
+    const ttfFiles = await fs.promises
+        .readdir(`${srcFolder}/fonts`)
+        .then((files) => files.filter((file) => file.endsWith('.ttf')))
+        .catch(() => [])
+
+    if (ttfFiles.length === 0) {
+        console.log('No TTF files found')
+        return
+    }
+
+    await ensureDirectoryExists(path.build.fonts)
+
+    for (const file of ttfFiles) {
+        console.log(`Converting ${file}...`)
+        const inputPath = `${srcFolder}/fonts/${file}`
+        const fontName = _basename(file, '.ttf')
+
+        try {
+            // Конвертируем в WOFF
+            const woffFontmin = new Fontmin().src(inputPath).dest(path.build.fonts).use(Fontmin.ttf2woff())
+
+            await new Promise((resolve, reject) => {
+                woffFontmin.run((err, files) => {
+                    if (err) {
+                        console.error(`Error converting ${file} to WOFF:`, err)
+                        reject(err)
+                    } else {
+                        console.log(`Converted ${file} to WOFF`)
+                        resolve()
+                    }
+                })
+            })
+
+            // Конвертируем в WOFF2
+            const woff2Fontmin = new Fontmin().src(inputPath).dest(path.build.fonts).use(Fontmin.ttf2woff2())
+
+            await new Promise((resolve, reject) => {
+                woff2Fontmin.run((err, files) => {
+                    if (err) {
+                        console.error(`Error converting ${file} to WOFF2:`, err)
+                        reject(err)
+                    } else {
+                        console.log(`Converted ${file} to WOFF2`)
+                        resolve()
+                    }
+                })
+            })
+        } catch (error) {
+            console.error(`Error processing ${file}:`, error)
+        }
+    }
+
+    // Удаляем TTF файлы из папки public/fonts
+    console.log('Cleaning up TTF files from public/fonts...')
+    try {
+        const publicFonts = await fs.promises.readdir(path.build.fonts)
+        const ttfFilesToRemove = publicFonts.filter((file) => file.endsWith('.ttf'))
+
+        for (const file of ttfFilesToRemove) {
+            await fs.promises.unlink(`${path.build.fonts}${file}`)
+            console.log(`Removed ${file} from public/fonts`)
+        }
+    } catch (error) {
+        console.error('Error cleaning up TTF files:', error)
+    }
+}
+
+// Генерируем SCSS файл
+async function generateFontsScss() {
+    console.log('Generating fonts.scss...')
+    const fontsFile = `${appFolder}/scss/fonts/fonts.scss`
+
+    try {
+        const fonts = await fs.promises.readdir(path.build.fonts)
+
         if (fonts.length) {
-            fs.writeFile(fontsFile, '', cb)
+            await fs.promises.writeFile(fontsFile, '')
             let newFileOnly
 
-            fonts.forEach((font) => {
+            for (const font of fonts) {
                 const ext = extname(font)
                 const fontFileName = _basename(font, ext)
                 const basename = fontFileName.toLowerCase()
@@ -95,20 +203,38 @@ export function fontsStyle() {
                             fontStyle = 'normal'
                     }
 
-                    fs.appendFile(
+                    await fs.promises.appendFile(
                         fontsFile,
-                        `@font-face {\n\tfont-family: ${fontName};\n\tfont-display: swap;\n\tsrc: url("../fonts/${fontFileName}.woff2") format("woff2"), url("../fonts/${fontFileName}.woff") format("woff");\n\tfont-weight: ${fontWeight};\n\tfont-style: ${fontStyle};\n}\r\n`,
-                        cb
+                        `@font-face {\n\tfont-family: ${fontName};\n\tfont-display: swap;\n\tsrc: url("../fonts/${fontFileName}.woff2") format("woff2"), url("../fonts/${fontFileName}.woff") format("woff");\n\tfont-weight: ${fontWeight};\n\tfont-style: ${fontStyle};\n}\r\n`
                     )
 
                     newFileOnly = fontFileName
                 }
-            })
+            }
         } else {
-            fs.unlink(fontsFile, cb)
+            try {
+                await fs.promises.unlink(fontsFile)
+            } catch (error) {
+                // Файл может не существовать, игнорируем ошибку
+            }
         }
-    })
-    return app.gulp.src(`${app.path.appFolder}`)
+    } catch (error) {
+        console.error('Error generating fonts.scss:', error)
+    }
 }
 
-function cb() {}
+// Основная функция
+async function processFonts() {
+    try {
+        await convertOtfToTtf()
+        await convertTtfToWoff()
+        await generateFontsScss()
+        console.log('Fonts processing completed successfully!')
+    } catch (error) {
+        console.error('Error processing fonts:', error)
+        process.exit(1)
+    }
+}
+
+// Запускаем обработку
+processFonts()

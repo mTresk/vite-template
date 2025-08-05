@@ -10,7 +10,7 @@
         "dev": "vite",
         "build": "vite build",
         "preview": "vite preview",
-        "fonts": "gulp fonts",
+        "fonts": "node js/tasks/fonts.js",
         "lint": "stylelint scss/**/*.scss"
     },
     "dependencies": {
@@ -25,13 +25,10 @@
     },
     "devDependencies": {
         "@antfu/eslint-config": "^4.17.0",
-        "@types/gulp": "^4.0.17",
         "@types/inputmask": "^5.0.7",
         "autoprefixer": "^10.4.21",
         "eslint": "^9.31.0",
-        "gulp": "4.0.2",
-        "gulp-fonter-fix": "^0.0.1",
-        "gulp-ttf2woff2": "^5.0.0",
+        "fontmin": "^2.0.3",
         "prettier": "^3.6.2",
         "sass": "^1.89.2",
         "sharp": "^0.34.3",
