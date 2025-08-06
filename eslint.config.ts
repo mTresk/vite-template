@@ -5,6 +5,10 @@ export default antfu({
         indent: 4,
         quotes: 'single',
     },
+    formatters: {
+        css: true,
+        html: true,
+    },
     rules: {
         'node/prefer-global/process': 0,
         'no-unused-expressions': 0,
@@ -14,6 +18,5 @@ export default antfu({
         'no-new': 0,
         'antfu/consistent-chaining': 0,
         'curly': 1,
-        'style/arrow-parens': 0,
     },
 })
