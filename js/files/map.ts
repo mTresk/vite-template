@@ -6,7 +6,7 @@ function loadYMaps() {
         const script = document.createElement('script')
         script.src = `https://api-maps.yandex.ru/v3/?apikey=${import.meta.env.VITE_YANDEX_MAPS_API_KEY}&lang=ru_RU`
         script.onload = () => {
-            // @ts-ignore - ymaps3 будет доступен после загрузки скрипта
+            // @ts-expect-error - ymaps3 будет доступен после загрузки скрипта
             resolve(window.ymaps3)
         }
         script.onerror = () => reject(new Error('Failed to load Yandex Maps API'))
@@ -15,7 +15,9 @@ function loadYMaps() {
 }
 
 async function initMap() {
-    if (!mapRoot) return
+    if (!mapRoot) {
+        return
+    }
     const ymaps3: any = await loadYMaps()
     await ymaps3.ready
     const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } = ymaps3

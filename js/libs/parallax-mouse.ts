@@ -1,6 +1,6 @@
+import type { IMousePRLXConfig, IParallaxMouseElement } from '../types'
 import { FLS } from '../files/functions'
 import { flsModules } from '../files/modules'
-import type { IMousePRLXConfig, IParallaxMouseElement } from '../types'
 
 class MousePRLX {
     private config: IMousePRLXConfig
@@ -83,7 +83,9 @@ class MousePRLX {
 
     // Логирование в консоль
     private setLogging(message: string): void {
-        this.config.logging ? FLS(`[Parallax Mouse]: ${message}`) : null
+        if (this.config.logging) {
+            FLS(`[Parallax Mouse]: ${message}`)
+        }
     }
 }
 

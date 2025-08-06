@@ -11,7 +11,8 @@
         "build": "vite build",
         "preview": "vite preview",
         "fonts": "tsx js/tasks/fonts.ts",
-        "lint": "stylelint scss/**/*.scss"
+        "stylelint": "stylelint scss/**/*.scss",
+        "eslint": "eslint --fix"
     },
     "dependencies": {
         "inputmask": "^5.0.9",
@@ -29,6 +30,7 @@
         "autoprefixer": "^10.4.21",
         "eslint": "^9.31.0",
         "fontmin": "^2.0.3",
+        "jiti": "^2.5.1",
         "prettier": "^3.6.2",
         "sass": "^1.89.2",
         "sharp": "^0.34.3",

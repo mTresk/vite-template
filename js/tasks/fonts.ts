@@ -45,7 +45,7 @@ const fontStyles: FontStyle = {
     oblique: 'oblique',
 }
 
-const isValidFontFile = (filename: string): boolean => {
+function isValidFontFile(filename: string): boolean {
     const invalidFiles = ['.DS_Store', 'Thumbs.db', '.gitkeep', '.gitignore', 'desktop.ini']
     const validExtensions = ['.woff', '.woff2', '.ttf', '.otf']
     const ext = extname(filename).toLowerCase()
@@ -53,7 +53,7 @@ const isValidFontFile = (filename: string): boolean => {
     return !invalidFiles.includes(filename) && validExtensions.includes(ext) && !filename.startsWith('.')
 }
 
-const ensureDirectoryExists = async (dir: string): Promise<void> => {
+async function ensureDirectoryExists(dir: string): Promise<void> {
     try {
         await fs.promises.access(dir)
     } catch {
@@ -61,20 +61,20 @@ const ensureDirectoryExists = async (dir: string): Promise<void> => {
     }
 }
 
-const convertOtfToTtf = async (): Promise<void> => {
-    console.log('Converting OTF to TTF...')
+async function convertOtfToTtf(): Promise<void> {
+    console.warn('Converting OTF to TTF...')
     const otfFiles = await fs.promises
         .readdir(`${srcFolder}/fonts`)
         .then((files) => files.filter((file) => file.endsWith('.otf') && isValidFontFile(file)))
         .catch(() => [])
 
     if (otfFiles.length === 0) {
-        console.log('No OTF files found')
+        console.warn('No OTF files found')
         return
     }
 
     for (const file of otfFiles) {
-        console.log(`Converting ${file}...`)
+        console.warn(`Converting ${file}...`)
         const inputPath = `${srcFolder}/fonts/${file}`
 
         try {
@@ -86,7 +86,7 @@ const convertOtfToTtf = async (): Promise<void> => {
                         console.error(`Error converting ${file}:`, err)
                         reject(err)
                     } else {
-                        console.log(`Converted ${file} to TTF`)
+                        console.warn(`Converted ${file} to TTF`)
                         resolve()
                     }
                 })
@@ -97,22 +97,22 @@ const convertOtfToTtf = async (): Promise<void> => {
     }
 }
 
-const convertTtfToWoff = async (): Promise<void> => {
-    console.log('Converting TTF to WOFF/WOFF2...')
+async function convertTtfToWoff(): Promise<void> {
+    console.warn('Converting TTF to WOFF/WOFF2...')
     const ttfFiles = await fs.promises
         .readdir(`${srcFolder}/fonts`)
         .then((files) => files.filter((file) => file.endsWith('.ttf') && isValidFontFile(file)))
         .catch(() => [])
 
     if (ttfFiles.length === 0) {
-        console.log('No TTF files found')
+        console.warn('No TTF files found')
         return
     }
 
     await ensureDirectoryExists(path.build.fonts)
 
     for (const file of ttfFiles) {
-        console.log(`Converting ${file}...`)
+        console.warn(`Converting ${file}...`)
         const inputPath = `${srcFolder}/fonts/${file}`
 
         try {
@@ -124,7 +124,7 @@ const convertTtfToWoff = async (): Promise<void> => {
                         console.error(`Error converting ${file} to WOFF:`, err)
                         reject(err)
                     } else {
-                        console.log(`Converted ${file} to WOFF`)
+                        console.warn(`Converted ${file} to WOFF`)
                         resolve()
                     }
                 })
@@ -138,7 +138,7 @@ const convertTtfToWoff = async (): Promise<void> => {
                         console.error(`Error converting ${file} to WOFF2:`, err)
                         reject(err)
                     } else {
-                        console.log(`Converted ${file} to WOFF2`)
+                        console.warn(`Converted ${file} to WOFF2`)
                         resolve()
                     }
                 })
@@ -148,21 +148,21 @@ const convertTtfToWoff = async (): Promise<void> => {
         }
     }
 
-    console.log('Cleaning up TTF files from assets/fonts...')
+    console.warn('Cleaning up TTF files from assets/fonts...')
     try {
         const publicFonts = await fs.promises.readdir(path.build.fonts)
         const ttfFilesToRemove = publicFonts.filter((file) => file.endsWith('.ttf') && isValidFontFile(file))
 
         for (const file of ttfFilesToRemove) {
             await fs.promises.unlink(`${path.build.fonts}${file}`)
-            console.log(`Removed ${file} from assets/fonts`)
+            console.warn(`Removed ${file} from assets/fonts`)
         }
     } catch (error) {
         console.error('Error cleaning up TTF files:', error)
     }
 }
 
-const getFontWeight = (basename: string): number => {
+function getFontWeight(basename: string): number {
     for (const [key, value] of Object.entries(fontWeights)) {
         if (basename.includes(key)) {
             return value
@@ -171,7 +171,7 @@ const getFontWeight = (basename: string): number => {
     return 400
 }
 
-const getFontStyle = (basename: string): string => {
+function getFontStyle(basename: string): string {
     for (const [key, value] of Object.entries(fontStyles)) {
         if (basename.includes(key)) {
             return value
@@ -180,8 +180,8 @@ const getFontStyle = (basename: string): string => {
     return 'normal'
 }
 
-const generateFontsScss = async (): Promise<void> => {
-    console.log('Generating fonts.scss...')
+async function generateFontsScss(): Promise<void> {
+    console.warn('Generating fonts.scss...')
     const fontsFile = `${appFolder}/scss/fonts/fonts.scss`
 
     try {
@@ -190,12 +190,12 @@ const generateFontsScss = async (): Promise<void> => {
 
         const filteredFiles = allFiles.filter((file) => !isValidFontFile(file))
         if (filteredFiles.length > 0) {
-            console.log(`Ignored files: ${filteredFiles.join(', ')}`)
+            console.warn(`Ignored files: ${filteredFiles.join(', ')}`)
         }
 
         if (fonts.length) {
             await fs.promises.writeFile(fontsFile, '')
-            let processedFonts = new Set<string>()
+            const processedFonts = new Set<string>()
 
             for (const font of fonts) {
                 const ext = extname(font)
@@ -230,12 +230,12 @@ const generateFontsScss = async (): Promise<void> => {
     }
 }
 
-const processFonts = async (): Promise<void> => {
+async function processFonts(): Promise<void> {
     try {
         await convertOtfToTtf()
         await convertTtfToWoff()
         await generateFontsScss()
-        console.log('Fonts processing completed successfully!')
+        console.warn('Fonts processing completed successfully!')
     } catch (error) {
         console.error('Error processing fonts:', error)
         process.exit(1)

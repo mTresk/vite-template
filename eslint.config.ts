@@ -13,5 +13,6 @@ export default antfu({
         'style/comma-dangle': 0,
         'no-new': 0,
         'antfu/consistent-chaining': 0,
+        'curly': 1,
     },
 })

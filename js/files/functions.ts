@@ -218,6 +218,49 @@ export function spoilers(): void {
             return !item.dataset.spoilers?.split(',')[0]
         })
 
+        // Работа с контентом
+        const initSpoilerBody = (spoilersBlock: HTMLElement, hideSpoilerBody = true): void => {
+            const spoilerTitlesNodeList = spoilersBlock.querySelectorAll<HTMLElement>('[data-spoiler]')
+            const spoilerTitles = Array.from(spoilerTitlesNodeList).filter((item) => {
+                return item.closest('[data-spoilers]') === spoilersBlock
+            })
+
+            if (spoilerTitles.length) {
+                spoilerTitles.forEach((spoilerTitle) => {
+                    if (hideSpoilerBody) {
+                        spoilerTitle.removeAttribute('tabindex')
+                        if (!spoilerTitle.classList.contains('_spoiler-active')) {
+                            const nextElement = spoilerTitle.nextElementSibling as HTMLElement
+                            if (nextElement) {
+                                nextElement.hidden = true
+                            }
+                        }
+                    } else {
+                        spoilerTitle.setAttribute('tabindex', '-1')
+                        const nextElement = spoilerTitle.nextElementSibling as HTMLElement
+                        if (nextElement) {
+                            nextElement.hidden = false
+                        }
+                    }
+                })
+            }
+        }
+
+        const hideSpoilersBody = (spoilersBlock: HTMLElement): void => {
+            const spoilerActiveTitle = spoilersBlock.querySelector<HTMLElement>('[data-spoiler]._spoiler-active')
+            const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
+                ? Number.parseInt(spoilersBlock.dataset.spoilersSpeed)
+                : 500
+
+            if (spoilerActiveTitle && !spoilersBlock.querySelectorAll('._slide').length) {
+                spoilerActiveTitle.classList.remove('_spoiler-active')
+                const nextElement = spoilerActiveTitle.nextElementSibling as HTMLElement
+                if (nextElement) {
+                    _slideUp(nextElement, spoilerSpeed)
+                }
+            }
+        }
+
         const setSpoilerAction = (e: Event): void => {
             const el = e.target as HTMLElement
             const spoilerTitle = el.closest('[data-spoiler]') as HTMLElement | null
@@ -261,34 +304,6 @@ export function spoilers(): void {
             })
         }
 
-        // Работа с контентом
-        const initSpoilerBody = (spoilersBlock: HTMLElement, hideSpoilerBody = true): void => {
-            const spoilerTitlesNodeList = spoilersBlock.querySelectorAll<HTMLElement>('[data-spoiler]')
-            const spoilerTitles = Array.from(spoilerTitlesNodeList).filter((item) => {
-                return item.closest('[data-spoilers]') === spoilersBlock
-            })
-
-            if (spoilerTitles.length) {
-                spoilerTitles.forEach((spoilerTitle) => {
-                    if (hideSpoilerBody) {
-                        spoilerTitle.removeAttribute('tabindex')
-                        if (!spoilerTitle.classList.contains('_spoiler-active')) {
-                            const nextElement = spoilerTitle.nextElementSibling as HTMLElement
-                            if (nextElement) {
-                                nextElement.hidden = true
-                            }
-                        }
-                    } else {
-                        spoilerTitle.setAttribute('tabindex', '-1')
-                        const nextElement = spoilerTitle.nextElementSibling as HTMLElement
-                        if (nextElement) {
-                            nextElement.hidden = false
-                        }
-                    }
-                })
-            }
-        }
-
         // Инициализация обычных спойлеров
         if (spoilersRegular.length) {
             initSpoilers(spoilersRegular, false)
@@ -304,21 +319,6 @@ export function spoilers(): void {
                 })
                 initSpoilers(mdQueriesItem.itemsArray, mdQueriesItem.matchMedia)
             })
-        }
-
-        const hideSpoilersBody = (spoilersBlock: HTMLElement): void => {
-            const spoilerActiveTitle = spoilersBlock.querySelector<HTMLElement>('[data-spoiler]._spoiler-active')
-            const spoilerSpeed = spoilersBlock.dataset.spoilersSpeed
-                ? Number.parseInt(spoilersBlock.dataset.spoilersSpeed)
-                : 500
-
-            if (spoilerActiveTitle && !spoilersBlock.querySelectorAll('._slide').length) {
-                spoilerActiveTitle.classList.remove('_spoiler-active')
-                const nextElement = spoilerActiveTitle.nextElementSibling as HTMLElement
-                if (nextElement) {
-                    _slideUp(nextElement, spoilerSpeed)
-                }
-            }
         }
 
         // Закрытие при клике вне спойлера

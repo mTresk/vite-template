@@ -1,6 +1,6 @@
+import type { IWatcherConfig, IWatcherElement, IWatcherParams } from '../types'
 import { FLS, uniqArray } from '../files/functions'
 import { flsModules } from '../files/modules'
-import { IWatcherConfig, IWatcherElement, IWatcherParams } from '../types'
 
 // Наблюдатель объектов [всевидящее око]
 // data-watch - можно писать значение для применения кастомного кода
@@ -20,7 +20,10 @@ class ScrollWatcher {
         }
         this.config = Object.assign(defaultConfig, props)
         this.observer = null
-        !document.documentElement.classList.contains('watcher') ? this.scrollWatcherRun() : null
+
+        if (!document.documentElement.classList.contains('watcher')) {
+            this.scrollWatcherRun()
+        }
     }
 
     // Обновляем конструктор
@@ -140,12 +143,16 @@ class ScrollWatcher {
         if (entry.isIntersecting) {
             // Видим объект
             // добавляем класс
-            !targetElement.classList.contains('_watcher-view') ? targetElement.classList.add('_watcher-view') : null
+            if (!targetElement.classList.contains('_watcher-view')) {
+                targetElement.classList.add('_watcher-view')
+            }
             this.scrollWatcherLogging(`Я вижу ${targetElement.classList}, добавил класс _watcher-view`)
         } else {
             // Не видим объект
             // убираем класс
-            targetElement.classList.contains('_watcher-view') ? targetElement.classList.remove('_watcher-view') : null
+            if (targetElement.classList.contains('_watcher-view')) {
+                targetElement.classList.remove('_watcher-view')
+            }
             this.scrollWatcherLogging(`Я не вижу ${targetElement.classList}, убрал класс _watcher-view`)
         }
     }
@@ -157,7 +164,9 @@ class ScrollWatcher {
 
     // Функция вывода в консоль
     scrollWatcherLogging(message: string): void {
-        this.config.logging ? FLS(`[Наблюдатель]: ${message}`) : null
+        if (this.config.logging) {
+            FLS(`[Наблюдатель]: ${message}`)
+        }
     }
 
     // Функция обработки наблюдения
@@ -166,9 +175,9 @@ class ScrollWatcher {
         // Обработка базовых действий точек срабатывания
         this.scrollWatcherIntersecting(entry, targetElement)
         // Если есть атрибут data-watch-once убираем слежку
-        targetElement.hasAttribute('data-watch-once') && entry.isIntersecting
-            ? this.scrollWatcherOff(targetElement, observer)
-            : null
+        if (targetElement.hasAttribute('data-watch-once') && entry.isIntersecting) {
+            this.scrollWatcherOff(targetElement, observer)
+        }
         // Создаем свое событие обратной связи
         document.dispatchEvent(
             new CustomEvent('watcherCallback', {

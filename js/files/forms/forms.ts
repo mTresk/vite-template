@@ -378,10 +378,10 @@ export function formRating() {
                     method: 'GET',
 
                     // body: JSON.stringify({
-                    //	userRating: value
+                    //     userRating: value
                     // }),
                     // headers: {
-                    //	'content-type': 'application/json'
+                    //     'content-type': 'application/json'
                     // }
                 })
                 if (response.ok) {
