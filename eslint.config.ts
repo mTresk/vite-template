@@ -14,5 +14,6 @@ export default antfu({
         'no-new': 0,
         'antfu/consistent-chaining': 0,
         'curly': 1,
+        'style/arrow-parens': 0,
     },
 })
