@@ -65,7 +65,7 @@ async function convertOtfToTtf(): Promise<void> {
     console.warn('Converting OTF to TTF...')
     const otfFiles = await fs.promises
         .readdir(`${srcFolder}/fonts`)
-        .then((files) => files.filter((file) => file.endsWith('.otf') && isValidFontFile(file)))
+        .then(files => files.filter(file => file.endsWith('.otf') && isValidFontFile(file)))
         .catch(() => [])
 
     if (otfFiles.length === 0) {
@@ -101,7 +101,7 @@ async function convertTtfToWoff(): Promise<void> {
     console.warn('Converting TTF to WOFF/WOFF2...')
     const ttfFiles = await fs.promises
         .readdir(`${srcFolder}/fonts`)
-        .then((files) => files.filter((file) => file.endsWith('.ttf') && isValidFontFile(file)))
+        .then(files => files.filter(file => file.endsWith('.ttf') && isValidFontFile(file)))
         .catch(() => [])
 
     if (ttfFiles.length === 0) {
@@ -151,7 +151,7 @@ async function convertTtfToWoff(): Promise<void> {
     console.warn('Cleaning up TTF files from assets/fonts...')
     try {
         const publicFonts = await fs.promises.readdir(path.build.fonts)
-        const ttfFilesToRemove = publicFonts.filter((file) => file.endsWith('.ttf') && isValidFontFile(file))
+        const ttfFilesToRemove = publicFonts.filter(file => file.endsWith('.ttf') && isValidFontFile(file))
 
         for (const file of ttfFilesToRemove) {
             await fs.promises.unlink(`${path.build.fonts}${file}`)
@@ -188,7 +188,7 @@ async function generateFontsScss(): Promise<void> {
         const allFiles = await fs.promises.readdir(path.build.fonts)
         const fonts = allFiles.filter(isValidFontFile)
 
-        const filteredFiles = allFiles.filter((file) => !isValidFontFile(file))
+        const filteredFiles = allFiles.filter(file => !isValidFontFile(file))
         if (filteredFiles.length > 0) {
             console.warn(`Ignored files: ${filteredFiles.join(', ')}`)
         }
